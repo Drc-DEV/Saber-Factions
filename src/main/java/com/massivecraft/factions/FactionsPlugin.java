@@ -240,6 +240,10 @@ public class FactionsPlugin extends MPlugin {
         return this.clipPlaceholderAPIManager != null;
     }
 
+    public ClipPlaceholderAPIManager getClipPlaceholderAPIManager() {
+        return clipPlaceholderAPIManager;
+    }
+
     public boolean isMVdWPlaceholderAPIHooked() {
         return this.mvdwPlaceholderAPIManager;
     }

@@ -7,6 +7,7 @@ import com.massivecraft.factions.tag.FactionTag;
 import com.massivecraft.factions.tag.Tag;
 import com.massivecraft.factions.util.timer.TimerManager;
 import com.massivecraft.factions.zcore.util.TL;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import org.apache.commons.lang.time.DurationFormatUtils;
@@ -22,6 +23,10 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
 
     private static void logInvalid(String placeholder) {
         FactionsPlugin.getInstance().getLogger().log(Level.INFO, "Invalid request through PlaceholderAPI for placeholder '" + placeholder + "'");
+    }
+
+    public String parse(Player player, String message) {
+        return PlaceholderAPI.setPlaceholders(player, message);
     }
 
     // Identifier for this expansion
@@ -226,7 +231,7 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
         //If its not hardcoded lets try to grab it anyways
         boolean targetFaction = false;
         Object target = fPlayer;
-        String stripped = "";
+        String stripped;
         if (placeholder.startsWith("faction_")) {
             targetFaction = true;
             target = faction;

@@ -55,7 +55,10 @@ public class CommandContext {
     }
 
     public void msg(TL translation, Object... args) {
-        sender.sendMessage(FactionsPlugin.getInstance().txt.parse(translation.toString(), args));
+        String message = translation.toString();
+        if (FactionsPlugin.getInstance().isClipPlaceholderAPIHooked() && sender instanceof Player)
+            message = FactionsPlugin.getInstance().getClipPlaceholderAPIManager().parse(player, message);
+        sender.sendMessage(FactionsPlugin.getInstance().txt.parse(message, args));
     }
 
     public void sendMessage(String msg) {
