@@ -146,8 +146,6 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
                 return FactionTag.TNT_MAX.replace(FactionTag.TNT_MAX.getTag(), faction);
             case "faction_points":
                 return fPlayer.hasFaction() ? String.valueOf(faction.getPoints()) : "0";
-            case "discord_acount":
-                return fPlayer.discordSetup() ? String.valueOf(fPlayer.discordUserID()) : "Not Linked";
             case "faction_discord":
                 return fPlayer.hasFaction() ? String.valueOf(faction.getDiscord()) : "Not Linked";
             case "faction_powerboost":

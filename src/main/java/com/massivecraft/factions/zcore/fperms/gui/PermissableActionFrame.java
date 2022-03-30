@@ -1,8 +1,8 @@
 package com.massivecraft.factions.zcore.fperms.gui;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
@@ -29,13 +29,12 @@ public class PermissableActionFrame {
      * @author Illyria Team
      */
 
-    private Gui gui;
+    private ChestGui gui;
 
     public PermissableActionFrame(Faction f) {
         ConfigurationSection section = FactionsPlugin.getInstance().getFileManager().getFperms().getConfig().getConfigurationSection("fperm-gui.action");
         assert section != null;
-        gui = new Gui(FactionsPlugin.getInstance(),
-                section.getInt("rows", 4),
+        gui = new ChestGui(section.getInt("rows", 4),
                 CC.translate(Objects.requireNonNull(FactionsPlugin.getInstance().getFileManager().getFperms().getConfig().getString("fperm-gui.action.name")).replace("{faction}", f.getTag())));
     }
 
@@ -70,7 +69,7 @@ public class PermissableActionFrame {
 
                     if (success) fplayer.msg(TL.COMMAND_PERM_SET, action.name(), access.name(), perm.name());
                     else fplayer.msg(TL.COMMAND_PERM_LOCKED);
-                    if(Conf.logLandClaims) {
+                    if (Conf.logLandClaims) {
                         Logger.print(String.format(TL.COMMAND_PERM_SET.toString(), action.name(), access.name(), perm.name()) + " for faction " + fplayer.getTag(), Logger.PrefixType.DEFAULT);
                     }
                     // Closing and opening resets the cursor.

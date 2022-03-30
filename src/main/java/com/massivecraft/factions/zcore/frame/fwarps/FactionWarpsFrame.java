@@ -1,8 +1,8 @@
 package com.massivecraft.factions.zcore.frame.fwarps;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
@@ -23,12 +23,12 @@ import java.util.Map;
 
 public class FactionWarpsFrame {
 
-    private Gui gui;
+    private ChestGui gui;
     private ConfigurationSection section;
 
     public FactionWarpsFrame(final Faction f) {
         this.section = FactionsPlugin.getInstance().getConfig().getConfigurationSection("fwarp-gui");
-        this.gui = new Gui(FactionsPlugin.getInstance(), section.getInt("rows", 3), CC.translate(this.section.getString("name").replace("{faction}", f.getTag())));
+        this.gui = new ChestGui(section.getInt("rows", 3), CC.translate(this.section.getString("name").replace("{faction}", f.getTag())));
     }
 
     public void buildGUI(final FPlayer fplayer) {

@@ -1,8 +1,8 @@
 package com.massivecraft.factions.zcore.fperms.gui;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
@@ -25,13 +25,12 @@ public class PermissableRelationFrame {
      * @author Illyria Team
      */
 
-    private Gui gui;
+    private ChestGui gui;
 
     public PermissableRelationFrame(Faction f) {
         ConfigurationSection section = FactionsPlugin.getInstance().getFileManager().getFperms().getConfig().getConfigurationSection("fperm-gui.relation");
         assert section != null;
-        gui = new Gui(FactionsPlugin.getInstance(),
-                section.getInt("rows", 4),
+        gui = new ChestGui(section.getInt("rows", 4),
                 CC.translate(Objects.requireNonNull(FactionsPlugin.getInstance().getFileManager().getFperms().getConfig().getString("fperm-gui.relation.name")).replace("{faction}", f.getTag())));
     }
 

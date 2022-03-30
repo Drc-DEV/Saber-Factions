@@ -1,7 +1,6 @@
 package com.massivecraft.factions.zcore.persist;
 
 import com.massivecraft.factions.*;
-import com.massivecraft.factions.discord.Discord;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent.PlayerDisbandReason;
@@ -20,7 +19,6 @@ import com.massivecraft.factions.zcore.fperms.Permissable;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.frame.fupgrades.UpgradeType;
 import com.massivecraft.factions.zcore.util.TL;
-import net.dv8tion.jda.api.entities.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -402,18 +400,6 @@ public abstract class MemoryFaction implements Faction, EconomyParticipator {
         // Send FPlayerLeaveEvent for each player in the faction and reset their Discord settings
         for (FPlayer fplayer : this.getFPlayers()) {
             Bukkit.getServer().getPluginManager().callEvent(new FPlayerLeaveEvent(fplayer, this, FPlayerLeaveEvent.PlayerLeaveReason.DISBAND));
-            if (Discord.useDiscord && fplayer.discordSetup() && Discord.isInMainGuild(fplayer.discordUser()) && Discord.mainGuild != null) {
-                Member m = Discord.mainGuild.retrieveMember(fplayer.discordUser()).complete();
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.leaderRoles") && fplayer.getRole() == Role.LEADER) {
-                    Discord.mainGuild.removeRoleFromMember(m, Discord.mainGuild.getRoleById(FactionsPlugin.getInstance().getFileManager().getDiscord().fetchString("Discord.Guild.leaderRoleID"))).queue();
-                }
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.factionRoles")) {
-                    Discord.mainGuild.removeRoleFromMember(m, Objects.requireNonNull(Discord.createFactionRole(this.getTag()))).queue();
-                }
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.factionDiscordTags")) {
-                    Discord.resetNick(fplayer);
-                }
-            }
         }
 
         if (Conf.logFactionDisband) {
@@ -1346,15 +1332,6 @@ public abstract class MemoryFaction implements Faction, EconomyParticipator {
         } else { // promote new faction admin
             if (oldLeader != null) oldLeader.setRole(Role.NORMAL);
             replacements.get(0).setRole(Role.LEADER);
-            if (Discord.useDiscord && replacements.get(0).discordSetup() && Discord.isInMainGuild(replacements.get(0).discordUser()) && Discord.mainGuild != null) {
-                Member m = Discord.mainGuild.retrieveMember(replacements.get(0).discordUser()).complete();
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.factionRoles"))
-                    Discord.mainGuild.addRoleToMember(m, Objects.requireNonNull(Discord.createFactionRole(this.getTag()))).queue();
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.leaderRoles"))
-                    Discord.mainGuild.addRoleToMember(m, Discord.mainGuild.getRoleById(FactionsPlugin.getInstance().getFileManager().getDiscord().fetchString("Discord.Guild.leaderRoleID"))).queue();
-                if (FactionsPlugin.getInstance().getFileManager().getDiscord().fetchBoolean("Discord.Guild.factionDiscordTags"))
-                    Discord.mainGuild.modifyNickname(m, Discord.getNicknameString(replacements.get(0))).queue();
-            }
             this.msg(TL.AUTOLEAVE_ADMIN_PROMOTED, oldLeader == null ? "" : oldLeader.getName(), replacements.get(0).getName());
             Logger.print("Faction " + this.getTag() + " (" + this.getId() + ") admin was removed. Replacement admin: " + replacements.get(0).getName(), Logger.PrefixType.DEFAULT);
         }

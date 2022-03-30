@@ -29,7 +29,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.0</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -38,7 +38,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>3.2.4</version>
                     <configuration>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <relocations>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>xyz.xenondevs</groupId>
             <artifactId>particle</artifactId>
-            <version>1.6.6</version>
+            <version>1.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>me.lucko</groupId>
             <artifactId>commodore</artifactId>
-            <version>1.3</version>
+            <version>1.11</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>8.2.0</version>
+            <version>8.7.0</version>
         </dependency>
         <dependency>
             <groupId>mcMMO</groupId>
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>me.lucko</groupId>
             <artifactId>helper</artifactId>
-            <version>5.6.5</version>
+            <version>5.6.9</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -174,15 +174,14 @@
         <dependency>
             <groupId>com.github.stefvanschie.inventoryframework</groupId>
             <artifactId>IF</artifactId>
-            <version>0.5.8</version>
+            <version>0.10.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>1.17-Spigot</groupId>
-            <artifactId>1.17-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.17</version>
-            <systemPath>${project.basedir}/serverJars/1.17.jar</systemPath>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>1.8.8-Spigot</groupId>
@@ -192,53 +191,11 @@
             <systemPath>${project.basedir}/serverJars/1.8.8.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>1.11-Spigot</groupId>
-            <artifactId>1.11-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.11</version>
-            <systemPath>${project.basedir}/serverJars/1.11.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>1.12-Spigot</groupId>
             <artifactId>1.12-Spigot</artifactId>
             <scope>system</scope>
             <version>1.12</version>
             <systemPath>${project.basedir}/serverJars/1.12.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>1.13-Spigot</groupId>
-            <artifactId>1.13-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.13</version>
-            <systemPath>${project.basedir}/serverJars/1.13.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>1.13.2-Spigot</groupId>
-            <artifactId>1.13.2-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.13.2</version>
-            <systemPath>${project.basedir}/serverJars/1.13.2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>1.14-Spigot</groupId>
-            <artifactId>1.14-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.14</version>
-            <systemPath>${project.basedir}/serverJars/1.14.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>1.15-Spigot</groupId>
-            <artifactId>1.15-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.15</version>
-            <systemPath>${project.basedir}/serverJars/1.15.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>1.16.5-Spigot</groupId>
-            <artifactId>1.16.5-Spigot</artifactId>
-            <scope>system</scope>
-            <version>1.16.5</version>
-            <systemPath>${project.basedir}/serverJars/1.16.5.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -302,25 +259,13 @@
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
-            <version>0.5.0</version>
+            <version>0.8.0</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>opus-java</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.1-SNAPSHOT</version>
+            <version>7.2.10</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -382,7 +327,7 @@
         <dependency>
             <groupId>com.bgsoftware</groupId>
             <artifactId>WildStackerAPI</artifactId>
-            <version>latest</version>
+            <version>3.7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -412,9 +357,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>mkremins</groupId>
+            <groupId>com.github.mkremins</groupId>
             <artifactId>fanciful</artifactId>
-            <version>0.4.0-SNAPSHOT</version>
+            <version>ed870f3a19</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -462,7 +407,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>21.0</version>
+            <version>31.1-jre</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -474,7 +419,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
+            <version>2.9.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -518,7 +463,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>1.7</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -542,9 +487,13 @@
             <layout>default</layout>
         </repository>
         <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
             <id>central</id>
             <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
+            <url>https://jcenter.bintray.com</url>
         </repository>
         <repository>
             <id>mojang-repo</id>
@@ -552,15 +501,19 @@
         </repository>
         <repository>
             <id>net.coreprotect</id>
-            <url>http://maven.playpro.com/</url>
+            <url>https://maven.playpro.com/</url>
         </repository>
         <repository>
             <id>ess-repo</id>
-            <url>http://ci.ender.zone/plugin/repository/everything/</url>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>spigot-api-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>rayzr-repo</id>
@@ -568,7 +521,7 @@
         </repository>
         <repository>
             <id>maven.sk89q.com</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <url>https://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
             <id>jcenter</id>
@@ -577,16 +530,16 @@
         </repository>
         <repository>
             <id>repo.mikeprimm.com</id>
-            <url>http://repo.mikeprimm.com/</url>
+            <url>https://repo.mikeprimm.com/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>mvdw-software</id>
             <name>MVdW Public Repositories</name>
-            <url>http://repo.mvdw-software.be/content/groups/public/</url>
+            <url>https://repo.mvdw-software.be/content/groups/public/</url>
         </repository>
         <repository>
             <id>papermc</id>
@@ -600,6 +553,11 @@
             <id>minecraft-libraries</id>
             <name>Minecraft Libraries</name>
             <url>https://libraries.minecraft.net</url>
+        </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
 

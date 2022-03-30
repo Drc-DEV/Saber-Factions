@@ -2,7 +2,6 @@ package com.massivecraft.factions.integration;
 
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.util.Logger;
-import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.Association;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -45,6 +44,7 @@ public class Worldguard {
     private Method worldAdaptMethod;
     private Method regionManagerGetMethod;
     private Constructor<?> vectorConstructor;
+    private Class<?> vectorClass;
     private Method vectorConstructorAsAMethodBecauseWhyNot;
     private StateFlag buildFlag;
     private StateFlag breakFlag;
@@ -147,12 +147,12 @@ public class Worldguard {
             }
 
             try {
-                Class<?> vectorClass = Class.forName("com.sk89q.worldedit.Vector");
+                vectorClass = Class.forName("com.sk89q.worldedit.Vector");
                 vectorConstructor = vectorClass.getConstructor(Double.TYPE, Double.TYPE, Double.TYPE);
                 regionManagerGetMethod = RegionManager.class.getMethod("getApplicableRegions", vectorClass);
             } catch (Exception ex) {
                 try {
-                    Class<?> vectorClass = Class.forName("com.sk89q.worldedit.math.BlockVector3");
+                    vectorClass = Class.forName("com.sk89q.worldedit.math.BlockVector3");
                     vectorConstructorAsAMethodBecauseWhyNot = vectorClass.getMethod("at", Double.TYPE, Double.TYPE, Double.TYPE);
                     regionManagerGetMethod = RegionManager.class.getMethod("getApplicableRegions", vectorClass);
                 } catch (Exception sodonewiththis) {
@@ -271,11 +271,14 @@ public class Worldguard {
 
                 int worldHeight = world.getMaxHeight(); // Allow for heights other than default
 
-                BlockVector minChunk = new BlockVector(minChunkX, 0, minChunkZ);
-                BlockVector maxChunk = new BlockVector(maxChunkX, worldHeight, maxChunkZ);
+                Object minChunk = vectorConstructorAsAMethodBecauseWhyNot == null
+                        ? vectorConstructor.newInstance(minChunkX, 0, minChunkZ)
+                        : vectorConstructorAsAMethodBecauseWhyNot.invoke(null, minChunkX, 0, minChunkZ);
+                Object maxChunk = vectorConstructorAsAMethodBecauseWhyNot == null
+                        ? vectorConstructor.newInstance(maxChunkX, worldHeight, maxChunkZ)
+                        : vectorConstructorAsAMethodBecauseWhyNot.invoke(null, maxChunkX, worldHeight, maxChunkZ);
 
-                ProtectedCuboidRegion region = new ProtectedCuboidRegion("wgfactionoverlapcheck", minChunk, maxChunk);
-
+                ProtectedCuboidRegion region = ProtectedCuboidRegion.class.getConstructor(String.class, vectorClass, vectorClass).newInstance("wgfactionoverlapcheck", minChunk, maxChunk);
                 Collection<ProtectedRegion> allregionslist = new ArrayList<>(getRegionManager(world).getRegions().values());
                 List<ProtectedRegion> overlaps = region.getIntersectingRegions(allregionslist);
 

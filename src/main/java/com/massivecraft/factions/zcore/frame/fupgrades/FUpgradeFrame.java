@@ -1,8 +1,8 @@
 package com.massivecraft.factions.zcore.frame.fupgrades;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
@@ -24,11 +24,10 @@ import java.util.List;
  */
 public class FUpgradeFrame {
 
-    private Gui gui;
+    private ChestGui gui;
 
     public FUpgradeFrame(Faction f) {
-        this.gui = new Gui(FactionsPlugin.getInstance(),
-                FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig().getInt("fupgrades.MainMenu.Rows", 5),
+        this.gui = new ChestGui(FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig().getInt("fupgrades.MainMenu.Rows", 5),
                 ChatColor.translateAlternateColorCodes('&', FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig()
                         .getString("fupgrades.MainMenu.Title").replace("{faction}", f.getTag())));
     }

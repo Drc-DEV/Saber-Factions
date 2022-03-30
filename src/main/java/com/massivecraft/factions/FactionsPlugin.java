@@ -20,8 +20,6 @@ import com.massivecraft.factions.listeners.*;
 import com.massivecraft.factions.missions.MissionHandler;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
-import com.massivecraft.factions.struct.nms.NMSManager;
-import com.massivecraft.factions.struct.nms.impl.*;
 import com.massivecraft.factions.util.*;
 import com.massivecraft.factions.util.adapters.*;
 import com.massivecraft.factions.util.flight.FlightEnhance;
@@ -82,7 +80,6 @@ public class FactionsPlugin extends MPlugin {
     public List<ReserveObject> reserveObjects;
     public FileManager fileManager;
     public TimerManager timerManager;
-    private NMSManager nmsManager;
     private FactionsPlayerListener factionsPlayerListener;
     private boolean locked = false;
     private Integer AutoLeaveTask = null;
@@ -148,8 +145,6 @@ public class FactionsPlugin extends MPlugin {
         StartupParameter.initData(this);
 
         VersionProtocol.printVerionInfo();
-
-        this.nmsManager = setupNMS();
 
         // Add Base Commands
         this.cmdBase = new FCmdRoot();
@@ -241,33 +236,6 @@ public class FactionsPlugin extends MPlugin {
         return factionsAddonHashMap;
     }
 
-    public NMSManager getNmsManager() {
-        return nmsManager;
-    }
-
-    public NMSManager setupNMS() {
-        switch (getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3]) {
-            case "v1_8_R3":
-                return new Version_1_8_R3();
-            case "v1_11_R1":
-                return new Version_1_11_R1();
-            case "v1_12_R1":
-                return new Version_1_12_R1();
-            case "v1_13_R1":
-                return new Version_1_13_R1();
-            case "v1_13_R2":
-                return new Version_1_13_R2();
-            case "v1_14_R1":
-                return new Version_1_14_R1();
-            case "v1_15_R1":
-                return new Version_1_15_R1();
-            case "v1_16_R3":
-                return new Version_1_16_R3();
-            default:
-                return new UnknownVersion();
-        }
-    }
-
     public boolean isClipPlaceholderAPIHooked() {
         return this.clipPlaceholderAPIManager != null;
     }
@@ -280,7 +248,7 @@ public class FactionsPlugin extends MPlugin {
         try {
             RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
             if (rsp != null) perms = rsp.getProvider();
-        } catch (NoClassDefFoundError ex) {
+        } catch (NoClassDefFoundError ignored) {
         }
     }
 

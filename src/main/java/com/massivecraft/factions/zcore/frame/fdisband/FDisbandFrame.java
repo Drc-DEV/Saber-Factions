@@ -1,8 +1,8 @@
 package com.massivecraft.factions.zcore.frame.fdisband;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
@@ -26,10 +26,10 @@ import java.util.Objects;
  */
 public class FDisbandFrame {
 
-    private Gui gui;
+    private ChestGui gui;
 
     public FDisbandFrame(Faction faction) {
-        this.gui = new Gui(FactionsPlugin.getInstance(), 1, ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(FactionsPlugin.getInstance().getConfig().getString("f-disband-gui.title"))));
+        this.gui = new ChestGui(1, ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(FactionsPlugin.getInstance().getConfig().getString("f-disband-gui.title"))));
     }
 
     public void buildGUI(FPlayer fPlayer) {

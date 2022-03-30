@@ -9,7 +9,6 @@ import com.massivecraft.factions.cmd.check.CheckTask;
 import com.massivecraft.factions.cmd.check.WeeWooTask;
 import com.massivecraft.factions.cmd.reserve.ListParameterizedType;
 import com.massivecraft.factions.cmd.reserve.ReserveObject;
-import com.massivecraft.factions.discord.Discord;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.Essentials;
 import com.massivecraft.factions.integration.dynmap.EngineDynmap;
@@ -91,8 +90,6 @@ public class StartupParameter {
             FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimer(plugin, CheckTask::cleanupTask, 0L, 1200L);
             FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new WeeWooTask(plugin), 600L, 600L);
         }
-
-        new Discord(plugin);
 
         populateConfSets();
 
