@@ -387,10 +387,10 @@ public class Conf {
     public static boolean useWorldConfigurationsAsWhitelist = false;
     public static Set<String> worldsNoClaiming = new LinkedHashSet<>();
     public static Set<String> worldsNoFactionsPlugin = new LinkedHashSet<>();
-
     public static Set<String> worldsNoPowerLoss = new LinkedHashSet<>();
     public static Set<String> worldsIgnorePvP = new LinkedHashSet<>();
     public static Set<String> worldsNoWildernessProtection = new LinkedHashSet<>();
+    public static Set<String> worldsNoHomesTeleport = new LinkedHashSet<>();
 
     // faction-<factionId>
     public static int defaultMaxVaults = 0;

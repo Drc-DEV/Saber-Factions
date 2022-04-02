@@ -75,6 +75,12 @@ public class CmdHome extends FCommand {
             return;
         }
 
+        if ((Conf.useWorldConfigurationsAsWhitelist && !Conf.worldsNoHomesTeleport.contains(context.player.getWorld().getName())) ||
+                (!Conf.useWorldConfigurationsAsWhitelist && Conf.worldsNoHomesTeleport.contains(context.player.getWorld().getName()))) {
+            context.msg(TL.COMMAND_HOME_WRONGWORLD);
+            return;
+        }
+
         if (!context.fPlayer.isAdminBypassing()) {
             Access access = context.faction.getAccess(context.fPlayer, PermissableAction.HOME);
             if (access != Access.ALLOW && context.fPlayer.getRole() != Role.LEADER) {
