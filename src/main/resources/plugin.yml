@@ -2,8 +2,8 @@ name: Factions
 version: ${project.version}
 api-version: 1.13
 main: com.massivecraft.factions.FactionsPlugin
-authors: [Olof Larsson, Brett Flannigan, drtshock, ProSavage, DroppingAnvil, Driftay]
-softdepend: [CoreProtect, PlayerVaults, PlaceholderAPI, MVdWPlaceholderAPI, PermissionsEx, Permissions, HeroChat, iChat, LocalAreaChat, LWC, nChat, ChatManager, CAPI, AuthMe, Vault, Spout, WorldEdit, WorldGuard, AuthDB, CaptureThePoints, CombatTag, dynmap, FactionsTop]
+authors: [Olof Larsson, Brett Flannigan, drtshock, ProSavage, Valentina_pro, DroppingAnvil, Driftay]
+softdepend: [CoreProtect, PlayerVaults, PlaceholderAPI, MVdWPlaceholderAPI, Permissions, LWC, nChat, CAPI, Vault, Spout, WorldEdit, WorldGuard, dynmap, FactionsTop]
 
 commands:
   factions:
