@@ -150,6 +150,8 @@ public interface Faction extends EconomyParticipator {
 
     void clearWarps();
 
+    void clearUpgrades();
+
     int getMaxVaults();
 
     void setMaxVaults(int value);
