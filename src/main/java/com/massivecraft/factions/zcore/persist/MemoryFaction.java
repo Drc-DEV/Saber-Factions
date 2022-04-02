@@ -306,6 +306,10 @@ public abstract class MemoryFaction implements Faction, EconomyParticipator {
         warps.clear();
     }
 
+    public void clearUpgrades() {
+        upgrades.clear();
+    }
+
     public int getMaxVaults() {
         return this.maxVaults;
     }
