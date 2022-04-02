@@ -17,7 +17,7 @@
 
     <build>
         <defaultGoal>clean install deploy</defaultGoal>
-        <finalName>${project.name}</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
@@ -43,8 +43,8 @@
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <relocations>
                             <relocation>
-                                <pattern>me.lucko.helper</pattern>
-                                <shadedPattern>com.massivecraft.factions.shade.me.lucko.helper</shadedPattern>
+                                <pattern>me.lucko.commodore</pattern>
+                                <shadedPattern>com.massivecraft.factions.shade.commodore</shadedPattern>
                             </relocation>
                             <relocation>
                                 <pattern>com.github.cryptomorin</pattern>
@@ -57,7 +57,7 @@
                             </relocation>
                             <relocation>
                                 <pattern>org.bstats</pattern>
-                                <shadedPattern>com.massivecraft.factions.shade.org.bstats</shadedPattern>
+                                <shadedPattern>com.massivecraft.factions.shade.bstats</shadedPattern>
                             </relocation>
                             <relocation>
                                 <pattern>net.dv8tion</pattern>
@@ -94,19 +94,6 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <finalName>SaberFactions</finalName>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
             </plugins>
     </build>
 
@@ -114,7 +101,7 @@
         <dependency>
             <groupId>xyz.xenondevs</groupId>
             <artifactId>particle</artifactId>
-            <version>1.7</version>
+            <version>1.7.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -293,6 +280,12 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- TODO: tell dynmap devs to include TitleFlags in dynmap-api
+            <groupId>us.dynmap</groupId>
+            <artifactId>dynmap-api</artifactId>
+            <version>3.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            -->
             <groupId>org.dynmap</groupId>
             <artifactId>dynmap</artifactId>
             <version>2.0</version>
@@ -478,6 +471,10 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>dynmap-repo</id>
+            <url>https://repo.mikeprimm.com/</url>
         </repository>
         <repository>
             <id>minecraft-libraries</id>
