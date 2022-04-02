@@ -10,7 +10,6 @@ import com.massivecraft.factions.cmd.check.WeeWooTask;
 import com.massivecraft.factions.cmd.reserve.ListParameterizedType;
 import com.massivecraft.factions.cmd.reserve.ReserveObject;
 import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.integration.Essentials;
 import com.massivecraft.factions.integration.dynmap.EngineDynmap;
 import com.massivecraft.factions.util.Logger;
 import com.massivecraft.factions.util.Metrics;
@@ -38,8 +37,6 @@ public class StartupParameter {
 
         FactionsPlugin.getInstance().fileManager = new FileManager();
         FactionsPlugin.getInstance().fileManager.setupFiles();
-
-        Essentials.setup();
 
         FactionsPlugin.getInstance().fLogManager = new FLogManager();
 

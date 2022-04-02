@@ -7,7 +7,6 @@ import com.massivecraft.factions.event.FactionDisbandEvent.PlayerDisbandReason;
 import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.integration.Econ;
-import com.massivecraft.factions.integration.Essentials;
 import com.massivecraft.factions.integration.Worldguard;
 import com.massivecraft.factions.scoreboards.FScoreboard;
 import com.massivecraft.factions.scoreboards.sidebar.FInfoSidebar;
@@ -28,6 +27,7 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
@@ -347,7 +347,11 @@ public abstract class MemoryFPlayer implements FPlayer {
     }
 
     public boolean isVanished() {
-        return Essentials.isVanished(getPlayer());
+        // This code is supported by SuperVanish, PremiumVanish, VanishNoPacket and a few more vanish plugins.
+        for (MetadataValue meta : getPlayer().getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
     }
 
     public void setIsAdminBypassing(boolean val) {
