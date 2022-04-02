@@ -1,9 +1,7 @@
-# SaberFactions
+# SaberFactions Debloated 1.18+
 
-![Downloads](https://img.shields.io/github/downloads/driftay/saber-factions/total.svg) [![CodeFactor](https://www.codefactor.io/repository/github/driftay/saber-factions/badge)](https://www.codefactor.io/repository/github/driftay/saber-factions) [![License](https://img.shields.io/badge/license-GNU%20General%20Public%20License%20v3.0-brightgreen)](https://github.com/SaberLLC/Saber-Factions/blob/1.6.x/LICENSE) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/SaberLLC/Saber-Factions) [![](https://jitpack.io/v/SaberLLC/Saber-Factions.svg)](https://jitpack.io/#SaberLLC/Saber-Factions)
+Support for outdated or obscure proprietary software dropped
 
-
-SaberFactions is an exotic, performance optimized, and feature rich factions plugin that focuses on not only making the player experience as great as possibly but maintaining this aspect with the cost of NOTHING! We strive to continue development for SaberFactions as the factions community is strongly growing and seeking new players every day. 
 
 ## Some Exciting Features
 Some of our features include the following 
@@ -31,20 +29,9 @@ Some of our features include the following
 	</repositories>
 
 	<dependency>
-	    <groupId>com.github.SaberLLC</groupId>
+	    <groupId>com.github.Drc-DEV</groupId>
 	    <artifactId>Saber-Factions</artifactId>
-	    <version>2.4.0-RC</version>
+	    <version>latest</version>
 	</dependency>
 ```
-## Moving Forward
 
-Moving forward we plan to take all suggestions into consideration, as they come from our community. 
-We Plan on Releasing the latest and greatest factions/skyblock/prison plugins minecraft has to offer and wont settle for anything less
-
-## Support
-Have a problem, question, or concer? We encourage our community to join and express any inquiry you may have
-https://discord.saber.pw
-
-Look forward to a bright future and a journey with all of you!
-
-Sincerely, SaberLLC Support Team!
