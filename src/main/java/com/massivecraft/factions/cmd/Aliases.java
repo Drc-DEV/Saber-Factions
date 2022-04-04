@@ -18,7 +18,6 @@ public class Aliases {
     public static ArrayList<String> alts_invite = new ArrayList<>(Collections.singletonList("invite"));
     public static ArrayList<String> alts_kick = new ArrayList<>(Collections.singletonList("kick"));
     public static ArrayList<String> audit = new ArrayList<>(Arrays.asList("audit", "log", "logs"));
-    public static ArrayList<String> check = new ArrayList<>(Arrays.asList("check"));
     public static ArrayList<String> weewoo = new ArrayList<>(Collections.singletonList("weewoo"));
     public static ArrayList<String> chest = new ArrayList<>(Arrays.asList("chest", "pv"));
     public static ArrayList<String> claim_auto = new ArrayList<>(Collections.singletonList("autoclaim"));
@@ -92,7 +91,6 @@ public class Aliases {
     public static ArrayList<String> warp = new ArrayList<>(Arrays.asList("warp", "warps"));
     public static ArrayList<String> getvault = new ArrayList<>(Collections.singletonList("getvault"));
     public static ArrayList<String> home = new ArrayList<>(Collections.singletonList("home"));
-    public static ArrayList<String> inspect = new ArrayList<>(Arrays.asList("inspect", "ins"));
     public static ArrayList<String> invsee = new ArrayList<>(Arrays.asList("invsee", "inventorysee"));
     public static ArrayList<String> invite = new ArrayList<>(Arrays.asList("invite", "inv"));
     public static ArrayList<String> join = new ArrayList<>(Collections.singletonList("join"));

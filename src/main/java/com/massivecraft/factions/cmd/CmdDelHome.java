@@ -1,8 +1,8 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
 
@@ -27,7 +27,7 @@ public class CmdDelHome extends FCommand {
     public void perform(CommandContext context) {
         FactionsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(FactionsPlugin.instance, () -> {
             //Check if homes are enabled
-            if (!Conf.homesEnabled) {
+            if (!Config.HOMES_ENABLED.getOption()) {
                 context.msg(TL.COMMAND_SETHOME_DISABLED);
                 return;
             }

@@ -6,6 +6,7 @@ import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdAlts extends FCommand {
@@ -34,7 +35,7 @@ public class CmdAlts extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("f-alts.Enabled", false)) {
+        if (!Config.FACTION_ALT_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Faction Alts");
             return;
         }

@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.econ;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
@@ -13,6 +12,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -57,7 +57,7 @@ public class CmdMoneyWithdraw extends FCommand {
         }
         boolean success = Econ.transferMoney(context.fPlayer, faction, context.fPlayer, amount);
 
-        if (success && Conf.logMoneyTransactions) {
+        if (success && Config.LOG_ECONOMY.getOption()) {
             Logger.printArgs(TL.COMMAND_MONEYWITHDRAW_WITHDRAW.toString(), Logger.PrefixType.WARNING, context.fPlayer.getName(), Econ.moneyString(amount), faction.describeTo(null));
             FactionsPlugin.instance.logFactionEvent(faction, FLogType.BANK_EDIT, context.fPlayer.getName(), CC.RedB + "WITHDREW", amount + "");
         }

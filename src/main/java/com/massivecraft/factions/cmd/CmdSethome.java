@@ -1,7 +1,11 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -26,7 +30,7 @@ public class CmdSethome extends FCommand {
     @Override
     public void perform(CommandContext context) {
         FactionsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(FactionsPlugin.instance, () -> {
-            if (!Conf.homesEnabled) {
+            if (!Config.HOMES_ENABLED.getOption()) {
                 context.msg(TL.COMMAND_SETHOME_DISABLED);
                 return;
             }
@@ -38,7 +42,7 @@ public class CmdSethome extends FCommand {
 
             // Can the player set the faction home HERE?
             if (!Permission.BYPASS.has(context.player) &&
-                    Conf.homesMustBeInClaimedTerritory &&
+                    Config.HOMES_ONLY_IN_CLAIMS.getOption() &&
                     Board.getInstance().getFactionAt(new FLocation(context.player)) != faction) {
                 context.msg(TL.COMMAND_SETHOME_NOTCLAIMED);
                 return;
@@ -55,7 +59,7 @@ public class CmdSethome extends FCommand {
             }
 
             // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-            if (!context.payForCommand(Conf.econCostSethome, TL.COMMAND_SETHOME_TOSET, TL.COMMAND_SETHOME_FORSET)) {
+            if (!context.payForCommand(Config.ECON_COST_SETHOME.getDouble(), TL.COMMAND_SETHOME_TOSET, TL.COMMAND_SETHOME_FORSET)) {
                 return;
             }
 

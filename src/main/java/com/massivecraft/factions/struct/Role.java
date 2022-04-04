@@ -1,8 +1,8 @@
 package com.massivecraft.factions.struct;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Permissable;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.ChatColor;
@@ -105,15 +105,15 @@ public enum Role implements Permissable {
 
         switch (this) {
             case LEADER:
-                return Conf.prefixLeader;
+                return Config.PREFIX_LEADER.getString();
             case COLEADER:
-                return Conf.prefixCoLeader;
+                return Config.PREFIX_COLEADER.getString();
             case MODERATOR:
-                return Conf.prefixMod;
+                return Config.PREFIX_MOD.getString();
             case NORMAL:
-                return Conf.prefixNormal;
+                return Config.PREFIX_NORMAL.getString();
             case RECRUIT:
-                return Conf.prefixRecruit;
+                return Config.PREFIX_RECRUIT.getString();
         }
 
         return "";

@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.grace;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.FactionsPlugin;
@@ -10,6 +9,7 @@ import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.timer.TimerManager;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 import java.util.concurrent.TimeUnit;
@@ -32,7 +32,7 @@ public class CmdGrace extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!Conf.useGraceSystem) {
+        if (!Config.FACTION_GRACE_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "factions grace");
             return;
         }
@@ -41,8 +41,8 @@ public class CmdGrace extends FCommand {
             if (context.sender.hasPermission(String.valueOf(Permission.GRACETOGGLE))) {
                 if (context.argAsString(0).equalsIgnoreCase("on") || context.argAsString(0).equalsIgnoreCase("start")) {
                     FactionsPlugin.getInstance().getTimerManager().graceTimer.setPaused(false);
-                    FactionsPlugin.getInstance().getTimerManager().graceTimer.setRemaining(TimeUnit.DAYS.toMillis(Conf.gracePeriodTimeDays), true);
-                    if (Conf.broadcastGraceToggles) {
+                    FactionsPlugin.getInstance().getTimerManager().graceTimer.setRemaining(TimeUnit.DAYS.toMillis(Config.FACTION_GRACE_DAYS.getInt()), true);
+                    if (Config.FACTION_GRACE_BROADCAST.getOption()) {
                         for (FPlayer follower : FPlayers.getInstance().getOnlinePlayers())
                             follower.msg(TL.COMMAND_GRACE_ENABLED_FORMAT, String.valueOf(TimerManager.getRemaining(FactionsPlugin.getInstance().getTimerManager().graceTimer.getRemaining(), true)));
                     }
@@ -52,7 +52,7 @@ public class CmdGrace extends FCommand {
                 if (context.argAsString(0).equalsIgnoreCase("off") || context.argAsString(0).equalsIgnoreCase("stop")) {
                     FactionsPlugin.getInstance().getTimerManager().graceTimer.setRemaining(TimeUnit.SECONDS.toMillis(0L), true);
                     FactionsPlugin.getInstance().getTimerManager().graceTimer.setPaused(false);
-                    if (Conf.broadcastGraceToggles) {
+                    if (Config.FACTION_GRACE_BROADCAST.getOption()) {
                         for (FPlayer follower : FPlayers.getInstance().getOnlinePlayers())
                             follower.msg(TL.COMMAND_GRACE_DISABLED_FORMAT);
                     }

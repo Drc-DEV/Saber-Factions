@@ -3,6 +3,7 @@ package com.massivecraft.factions.cmd;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdSeeDiscord extends FCommand {
@@ -23,7 +24,7 @@ public class CmdSeeDiscord extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("fdiscord.Enabled")) {
+        if (!Config.FACTION_DISCORD_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Faction Discords");
             return;
         }

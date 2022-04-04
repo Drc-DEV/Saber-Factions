@@ -5,6 +5,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.WarmUpUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.SmokeUtil;
@@ -38,12 +39,12 @@ public class CmdHome extends FCommand {
     @Override
     public void perform(CommandContext context) {
         // TODO: Hide this command on help also.
-        if (!Conf.homesEnabled) {
+        if (!Config.HOMES_ENABLED.getOption()) {
             context.msg(TL.COMMAND_HOME_DISABLED);
             return;
         }
 
-        if (!Conf.homesTeleportCommandEnabled) {
+        if (!Config.HOMES_TELEPORT_CMD_ENABLED.getOption()) {
             context.msg(TL.COMMAND_HOME_TELEPORTDISABLED);
             return;
         }
@@ -64,18 +65,17 @@ public class CmdHome extends FCommand {
             return;
         }
 
-        if (!Conf.homesTeleportAllowedFromEnemyTerritory && context.fPlayer.isInEnemyTerritory()) {
+        if (!Config.HOMES_TP_FROM_ENEMY_CLAIMS.getOption() && context.fPlayer.isInEnemyTerritory()) {
             context.msg(TL.COMMAND_HOME_INENEMY);
             return;
         }
 
-        if (!Conf.homesTeleportAllowedFromDifferentWorld && context.player.getWorld().getUID() != context.faction.getHome().getWorld().getUID()) {
+        if (!Config.HOMES_TP_FROM_OTHER_WORLD.getOption() && context.player.getWorld().getUID() != context.faction.getHome().getWorld().getUID()) {
             context.msg(TL.COMMAND_HOME_WRONGWORLD);
             return;
         }
 
-        if ((Conf.useWorldConfigurationsAsWhitelist && !Conf.worldsNoHomesTeleport.contains(context.player.getWorld().getName())) ||
-                (!Conf.useWorldConfigurationsAsWhitelist && Conf.worldsNoHomesTeleport.contains(context.player.getWorld().getName()))) {
+        if (Config.WORLDS_AS_BLACKLIST.getOption() == Config.WORLDS_HOMETP.getStringList().contains(context.player.getWorld().getName())) {
             context.msg(TL.COMMAND_HOME_WRONGWORLD);
             return;
         }
@@ -93,11 +93,10 @@ public class CmdHome extends FCommand {
         final Location loc = context.player.getLocation().clone();
 
         // if player is not in a safe zone or their own faction territory, only allow teleport if no enemies are nearby
-        if (Conf.homesTeleportAllowedEnemyDistance > 0
+        if (Config.HOMES_TP_ENEMY_DISTANCE.getDouble() > 0
+                && (!Config.HOMES_TP_IGNOREENEMIES_NOCLAIMWORLD.getOption() && Config.WORLDS_AS_BLACKLIST.getOption() == Config.WORLDS_CLAIMING.getStringList().contains(context.fPlayer.getPlayer().getWorld().getName()))
                 && !faction.isSafeZone()
-                && (!context.fPlayer.isInOwnTerritory()
-                || (context.fPlayer.isInOwnTerritory()
-                && !Conf.homesTeleportIgnoreEnemiesIfInOwnTerritory))) {
+                && (!context.fPlayer.isInOwnTerritory() || (context.fPlayer.isInOwnTerritory() && !Config.HOMES_TP_IGNOREENEMIES_OWNCLAIM.getOption()))) {
 
             World w = loc.getWorld();
             double x = loc.getX();
@@ -118,32 +117,32 @@ public class CmdHome extends FCommand {
                 double dx = Math.abs(x - l.getX());
                 double dy = Math.abs(y - l.getY());
                 double dz = Math.abs(z - l.getZ());
-                double max = Conf.homesTeleportAllowedEnemyDistance;
+                double max = Config.HOMES_TP_ENEMY_DISTANCE.getDouble();
 
                 // box-shaped distance check
                 if (dx > max || dy > max || dz > max) {
                     continue;
                 }
 
-                context.msg(TL.COMMAND_HOME_ENEMYNEAR, String.valueOf(Conf.homesTeleportAllowedEnemyDistance));
+                context.msg(TL.COMMAND_HOME_ENEMYNEAR, String.valueOf(Config.HOMES_TP_ENEMY_DISTANCE.getDouble()));
                 return;
             }
         }
 
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostHome, TL.COMMAND_HOME_TOTELEPORT.toString(), TL.COMMAND_HOME_FORTELEPORT.toString())) {
+        if (!context.payForCommand(Config.ECON_COST_HOME.getDouble(), TL.COMMAND_HOME_TOTELEPORT.toString(), TL.COMMAND_HOME_FORTELEPORT.toString())) {
             return;
         }
 
         context.doWarmUp(WarmUpUtil.Warmup.HOME, TL.WARMUPS_NOTIFY_TELEPORT, "Home", () -> {
             // Create a smoke effect
-            if (Conf.homesTeleportCommandSmokeEffectEnabled) {
+            if (Config.HOMES_TELEPORT_CMD_EFFECTS.getOption()) {
                 List<Location> smokeLocations = new ArrayList<>();
                 smokeLocations.add(loc);
                 smokeLocations.add(loc.add(0, 1, 0));
                 smokeLocations.add(context.faction.getHome());
                 smokeLocations.add(context.faction.getHome().clone().add(0, 1, 0));
-                SmokeUtil.spawnCloudRandom(smokeLocations, Conf.homesTeleportCommandSmokeEffectThickness);
+                SmokeUtil.spawnCloudRandom(smokeLocations, Config.HOMES_TELEPORT_CMD_EFFECT_THICC.getInt());
             }
             context.player.teleport(context.faction.getHome());
         }, FactionsPlugin.getInstance().getConfig().getLong("warmups.f-home", 15));

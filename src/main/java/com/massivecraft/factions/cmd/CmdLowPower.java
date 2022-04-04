@@ -1,8 +1,8 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdLowPower extends FCommand {
@@ -24,7 +24,7 @@ public class CmdLowPower extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        double maxPower = Conf.powerPlayerMax;
+        double maxPower = Config.POWER_PLAYER_MAX.getDouble();
         String format = TL.COMMAND_LOWPOWER_FORMAT.toString();
         context.msg(TL.COMMAND_LOWPOWER_HEADER.toString().replace("{maxpower}", (int) maxPower + ""));
         for (FPlayer fPlayer : context.faction.getFPlayers()) {

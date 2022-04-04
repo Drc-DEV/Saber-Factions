@@ -1,14 +1,11 @@
 package com.massivecraft.factions.util;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,17 +44,6 @@ public class MiscUtil {
         return diff.isEmpty() ? "Now" : diff;
     }
 
-    public static EntityType creatureTypeFromEntity(Entity entity) {
-        if (!(entity instanceof Creature)) {
-            return null;
-        }
-
-        String name = entity.getClass().getSimpleName();
-        name = name.substring(5); // Remove "Craft"
-
-        return EntityType.fromName(name);
-    }
-
     // Inclusive range
     public static long[] range(long start, long end) {
         long[] values = new long[(int) Math.abs(end - start) + 1];
@@ -92,19 +78,19 @@ public class MiscUtil {
     public static ArrayList<String> validateTag(String str) {
         ArrayList<String> errors = new ArrayList<>();
 
-        for (String blacklistItem : Conf.blacklistedFactionNames) {
+        for (String blacklistItem : Config.FACTION_BLACKLISTED_NAMES.getStringList()) {
             if (str.toLowerCase().contains(blacklistItem.toLowerCase())) {
                 errors.add(FactionsPlugin.instance.txt.parse(TL.GENERIC_FACTIONTAG_BLACKLIST.toString()));
                 break;
             }
         }
 
-        if (getComparisonString(str).length() < Conf.factionTagLengthMin) {
-            errors.add(FactionsPlugin.getInstance().txt.parse(TL.GENERIC_FACTIONTAG_TOOSHORT.toString(), Conf.factionTagLengthMin));
+        if (getComparisonString(str).length() < Config.FACTION_TAG_LENGTH_MIN.getInt()) {
+            errors.add(FactionsPlugin.getInstance().txt.parse(TL.GENERIC_FACTIONTAG_TOOSHORT.toString(), Config.FACTION_TAG_LENGTH_MIN.getInt()));
         }
 
-        if (str.length() > Conf.factionTagLengthMax) {
-            errors.add(FactionsPlugin.getInstance().txt.parse(TL.GENERIC_FACTIONTAG_TOOLONG.toString(), Conf.factionTagLengthMax));
+        if (str.length() > Config.FACTION_TAG_LENGTH_MAX.getInt()) {
+            errors.add(FactionsPlugin.getInstance().txt.parse(TL.GENERIC_FACTIONTAG_TOOLONG.toString(), Config.FACTION_TAG_LENGTH_MAX.getInt()));
         }
 
         for (char c : str.toCharArray()) {
@@ -129,7 +115,7 @@ public class MiscUtil {
             // Fix for some data being broken when we added the recruit rank.
             if (player.getRole() == null) {
                 player.setRole(Role.NORMAL);
-                Logger.print( String.format("Player %s had null role. Setting them to normal. This isn't good D:", player.getName()), Logger.PrefixType.WARNING);
+                Logger.print(String.format("Player %s had null role. Setting them to normal. This isn't good D:", player.getName()), Logger.PrefixType.WARNING);
             }
 
             switch (player.getRole()) {

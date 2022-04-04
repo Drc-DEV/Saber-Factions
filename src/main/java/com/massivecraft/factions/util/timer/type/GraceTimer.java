@@ -1,9 +1,9 @@
 package com.massivecraft.factions.util.timer.type;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.util.timer.GlobalTimer;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.file.CustomFile;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class GraceTimer extends GlobalTimer implements Listener {
 
     public GraceTimer() {
-        super("GRACE", TimeUnit.DAYS.toMillis(Conf.gracePeriodTimeDays));
+        super("GRACE", TimeUnit.DAYS.toMillis(Config.FACTION_GRACE_DAYS.getInt()));
     }
 
     @EventHandler

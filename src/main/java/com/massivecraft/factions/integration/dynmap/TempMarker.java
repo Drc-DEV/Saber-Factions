@@ -1,6 +1,6 @@
 package com.massivecraft.factions.integration.dynmap;
 
-import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.zcore.config.Config;
 import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerIcon;
@@ -31,7 +31,7 @@ public class TempMarker {
     public static MarkerIcon getMarkerIcon(MarkerAPI markerApi, String name) {
         MarkerIcon ret = markerApi.getMarkerIcon(name);
         if (ret == null) {
-            ret = markerApi.getMarkerIcon(Conf.DYNMAP_STYLE_HOME_MARKER);
+            ret = markerApi.getMarkerIcon(Config.DYNMAP_STYLE_HOME_MARKER.getString());
         }
         return ret;
     }

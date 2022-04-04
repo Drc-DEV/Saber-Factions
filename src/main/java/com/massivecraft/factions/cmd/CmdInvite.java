@@ -1,11 +1,11 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.audit.FLogType;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.CC;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
 import mkremins.fanciful.FancyMessage;
@@ -42,7 +42,7 @@ public class CmdInvite extends FCommand {
         }
 
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostInvite, TL.COMMAND_INVITE_TOINVITE.toString(), TL.COMMAND_INVITE_FORINVITE.toString())) {
+        if (!context.payForCommand(Config.ECON_COST_INVITE.getDouble(), TL.COMMAND_INVITE_TOINVITE.toString(), TL.COMMAND_INVITE_FORINVITE.toString())) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class CmdInvite extends FCommand {
                     .replace("%2$s", context.faction.getTag())
                     .replaceAll("&", "§"))
                     .tooltip(TL.COMMAND_INVITE_CLICKTOJOIN.toString())
-                    .command("/" + Conf.baseCommandAliases.get(0) + " join " + context.faction.getTag());
+                    .command("/" + Config.CMD_ALIASES.getStringList().get(0) + " join " + context.faction.getTag());
             message.send(target.getPlayer());
         }
         context.faction.msg(TL.COMMAND_INVITE_INVITED, context.fPlayer.describeTo(context.faction, true), target.describeTo(context.faction));

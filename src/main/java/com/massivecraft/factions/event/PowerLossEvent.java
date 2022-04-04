@@ -3,6 +3,7 @@ package com.massivecraft.factions.event;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.zcore.config.Config;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
@@ -80,7 +81,7 @@ public class PowerLossEvent extends FactionPlayerEvent implements Cancellable {
      * @return power to be lost as a Double.
      */
     public double getDefaultPowerLost() {
-        return Conf.powerPerDeath;
+        return Config.POWER_PER_DEATH.getDouble();
     }
 
     /**

@@ -1,10 +1,10 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TagUtil;
 
@@ -43,7 +43,7 @@ public class CmdList extends FCommand {
 
 
             // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-            if (!context.payForCommand(Conf.econCostList, "to list the factions", "for listing the factions"))
+            if (!context.payForCommand(Config.ECON_COST_LIST.getDouble(), "to list the factions", "for listing the factions"))
                 return;
 
             ArrayList<Faction> factionList = Factions.getInstance().getAllFactions();

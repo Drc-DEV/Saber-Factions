@@ -1,7 +1,7 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdStealth extends FCommand {
@@ -20,7 +20,7 @@ public class CmdStealth extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!Conf.useStealthSystem) {
+        if (!Config.FACTION_STEALTH_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Factions Stealth");
             return;
         }

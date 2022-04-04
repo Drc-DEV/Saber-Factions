@@ -1,6 +1,9 @@
 package com.massivecraft.factions.cmd.claim;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
@@ -8,6 +11,7 @@ import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.cmd.audit.FLogType;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.CC;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -44,8 +48,8 @@ public class CmdClaimLine extends FCommand {
         // Args
         Integer amount = context.argAsInt(0, 1); // Default to 1
 
-        if (amount > Conf.lineClaimLimit) {
-            context.fPlayer.msg(TL.COMMAND_CLAIMLINE_ABOVEMAX, Conf.lineClaimLimit);
+        if (amount > Config.FACTION_LINECLAIM_LIMIT.getInt()) {
+            context.fPlayer.msg(TL.COMMAND_CLAIMLINE_ABOVEMAX, Config.FACTION_LINECLAIM_LIMIT.getInt());
             return;
         }
 

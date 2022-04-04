@@ -1,8 +1,10 @@
 package com.massivecraft.factions.integration.dynmap;
 
+import com.google.common.collect.ImmutableMap;
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.persist.MemoryBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,9 +73,11 @@ public class EngineDynmap {
         }
         return ret.toString();
     }
+
     public static String getHtmlPlayerName(FPlayer fplayer) {
         return fplayer != null ? escapeHtml(fplayer.getName()) : "none";
     }
+
     public static String getHtmlPlayerUUID(FPlayer fplayer) {
         return fplayer != null ? escapeHtml(fplayer.getAccountId()) : "none";
     }
@@ -116,7 +120,7 @@ public class EngineDynmap {
         }
 
         // Should we even use dynmap?
-        if (!Conf.dynmapUse) {
+        if (!Config.DYNMAP_ENABLED.getOption()) {
             if (this.markerset != null) {
                 this.markerset.deleteMarkerSet();
                 this.markerset = null;
@@ -173,10 +177,10 @@ public class EngineDynmap {
     // Thread Safe / Asynchronous: Yes
     public TempMarkerSet createLayer() {
         TempMarkerSet ret = new TempMarkerSet();
-        ret.label = Conf.dynmapLayerName;
-        ret.minimumZoom = Conf.dynmapLayerMinimumZoom;
-        ret.priority = Conf.dynmapLayerPriority;
-        ret.hideByDefault = !Conf.dynmapLayerVisible;
+        ret.label = Config.DYNMAP_LAYER_NAME.getString();
+        ret.minimumZoom = Config.DYNMAP_LAYER_MINZOOM.getInt();
+        ret.priority = Config.DYNMAP_LAYER_PRIORITY.getInt();
+        ret.hideByDefault = !Config.DYNMAP_LAYER_VISIBLE.getOption();
         return ret;
     }
 
@@ -569,7 +573,7 @@ public class EngineDynmap {
 
     // Thread Safe / Asynchronous: Yes
     public Map<String, Set<String>> createPlayersets() {
-        if (!Conf.dynmapVisibilityByFaction) {
+        if (!Config.DYNMAP_VISIBILITY_BY_FACTION.getOption()) {
             return null;
         }
 
@@ -637,7 +641,7 @@ public class EngineDynmap {
 
     // Thread Safe / Asynchronous: Yes
     private String getDescription(Faction faction) {
-        String ret = "<div class=\"regioninfo\">" + Conf.dynmapDescription + "</div>";
+        String ret = "<div class=\"regioninfo\">" + Config.DYNMAP_DESC_POPUP.getString() + "</div>";
 
         // Name
         String name = faction.getTag();
@@ -652,7 +656,7 @@ public class EngineDynmap {
         // Money
 
         String money = "unavailable";
-        if (Conf.bankEnabled && Conf.dynmapDescriptionMoney)
+        if (Config.ECON_BANK_ENABLED.getOption() && Config.DYNMAP_DESC_MONEY.getOption())
             money = String.format("%.2f", faction.getFactionBalance());
         ret = ret.replace("%money%", money);
 
@@ -705,8 +709,8 @@ public class EngineDynmap {
             return false;
         }
 
-        Set<String> visible = Conf.dynmapVisibleFactions;
-        Set<String> hidden = Conf.dynmapHiddenFactions;
+        Set<String> visible = new HashSet<>(Config.DYNMAP_VISIBLE_FACTIONS.getStringList());
+        Set<String> hidden = new HashSet<>(Config.DYNMAP_HIDDEN_FACTIONS.getStringList());
 
         if (!visible.isEmpty() && !visible.contains(factionId) && !visible.contains(factionName) && !visible.contains("world:" + world)) {
             return false;
@@ -715,21 +719,39 @@ public class EngineDynmap {
         return !hidden.contains(factionId) && !hidden.contains(factionName) && !hidden.contains("world:" + world);
     }
 
+    // Optional per Faction style overrides. Any defined replace those in dynmapDefaultStyle.
+    // Specify Faction either by name or UUID.
+    private static Map<String, DynmapStyle> dynmapFactionStyles = ImmutableMap.of(
+            "SafeZone", new DynmapStyle().setStrokeColor("#FF00FF").setFillColor("#FF00FF").setBoost(false),
+            "WarZone", new DynmapStyle().setStrokeColor("#FF0000").setFillColor("#FF0000").setBoost(false)
+    );
+
+    public DynmapStyle getDefaultStyle() {
+        return new DynmapStyle()
+                .setStrokeColor(Config.DYNMAP_STYLE_LINE_COLOR.getString())
+                .setLineOpacity(Config.DYNMAP_STYLE_LINE_OPACITY.getDouble())
+                .setLineWeight(Config.DYNMAP_STYLE_LINE_WEIGHT.getInt())
+                .setFillColor(Config.DYNMAP_STYLE_FILL_COLOR.getString())
+                .setFillOpacity(Config.DYNMAP_STYLE_FILL_OPACITY.getDouble())
+                .setHomeMarker(Config.DYNMAP_STYLE_HOME_MARKER.getString())
+                .setBoost(Config.DYNMAP_STYLE_BOOST.getOption());
+    }
+
     // Thread Safe / Asynchronous: Yes
     public DynmapStyle getStyle(Faction faction) {
         DynmapStyle ret;
 
-        ret = Conf.dynmapFactionStyles.get(faction.getId());
+        ret = dynmapFactionStyles.get(faction.getId());
         if (ret != null) {
             return ret;
         }
 
-        ret = Conf.dynmapFactionStyles.get(faction.getTag());
+        ret = dynmapFactionStyles.get(faction.getTag());
         if (ret != null) {
             return ret;
         }
 
-        return Conf.dynmapDefaultStyle;
+        return getDefaultStyle();
     }
 
     // Find all contiguous blocks, set in target and clear in source

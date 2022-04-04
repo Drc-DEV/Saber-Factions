@@ -1,8 +1,8 @@
 package com.massivecraft.factions.struct;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Permissable;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.ChatColor;
@@ -106,15 +106,15 @@ public enum Relation implements Permissable {
 
         switch (this) {
             case MEMBER:
-                return Conf.colorMember;
+                return ChatColor.valueOf(Config.COLOR_MEMBER.getString());
             case ALLY:
-                return Conf.colorAlly;
+                return ChatColor.valueOf(Config.COLOR_ALLY.getString());
             case NEUTRAL:
-                return Conf.colorNeutral;
+                return ChatColor.valueOf(Config.COLOR_NEUTRAL.getString());
             case TRUCE:
-                return Conf.colorTruce;
+                return ChatColor.valueOf(Config.COLOR_TRUCE.getString());
             default:
-                return Conf.colorEnemy;
+                return ChatColor.valueOf(Config.COLOR_ENEMY.getString());
         }
     }
 
@@ -126,23 +126,23 @@ public enum Relation implements Permissable {
 
         if (online) {
             if (isEnemy()) {
-                return Conf.territoryEnemyDenyBuild;
+                return Config.CLAIMS_ENEMY_DENYBUILD.getOption();
             } else if (isAlly()) {
-                return Conf.territoryAllyDenyBuild;
+                return Config.CLAIMS_ALLY_DENYBUILD.getOption();
             } else if (isTruce()) {
-                return Conf.territoryTruceDenyBuild;
+                return Config.CLAIMS_TRUCE_DENYBUILD.getOption();
             } else {
-                return Conf.territoryDenyBuild;
+                return Config.CLAIMS_DENYBUILD.getOption();
             }
         } else {
             if (isEnemy()) {
-                return Conf.territoryEnemyDenyBuildWhenOffline;
+                return Config.CLAIMS_ENEMY_DENYBUILD_OFFLINE.getOption();
             } else if (isAlly()) {
-                return Conf.territoryAllyDenyBuildWhenOffline;
+                return Config.CLAIMS_ALLY_DENYBUILD_OFFLINE.getOption();
             } else if (isTruce()) {
-                return Conf.territoryTruceDenyBuildWhenOffline;
+                return Config.CLAIMS_TRUCE_DENYBUILD_OFFLINE.getOption();
             } else {
-                return Conf.territoryDenyBuildWhenOffline;
+                return Config.CLAIMS_DENYBUILD_OFFLINE.getOption();
             }
         }
     }
@@ -155,23 +155,23 @@ public enum Relation implements Permissable {
 
         if (online) {
             if (isEnemy()) {
-                return Conf.territoryEnemyPainBuild;
+                return Config.CLAIMS_ENEMY_PAINBUILD.getOption();
             } else if (isAlly()) {
-                return Conf.territoryAllyPainBuild;
+                return Config.CLAIMS_ALLY_PAINBUILD.getOption();
             } else if (isTruce()) {
-                return Conf.territoryTrucePainBuild;
+                return Config.CLAIMS_TRUCE_PAINBUILD.getOption();
             } else {
-                return Conf.territoryPainBuild;
+                return Config.CLAIMS_PAINBUILD.getOption();
             }
         } else {
             if (isEnemy()) {
-                return Conf.territoryEnemyPainBuildWhenOffline;
+                return Config.CLAIMS_ENEMY_PAINBUILD_OFFLINE.getOption();
             } else if (isAlly()) {
-                return Conf.territoryAllyPainBuildWhenOffline;
+                return Config.CLAIMS_ALLY_PAINBUILD_OFFLINE.getOption();
             } else if (isTruce()) {
-                return Conf.territoryTrucePainBuildWhenOffline;
+                return Config.CLAIMS_TRUCE_PAINBUILD_OFFLINE.getOption();
             } else {
-                return Conf.territoryPainBuildWhenOffline;
+                return Config.CLAIMS_PAINBUILD_OFFLINE.getOption();
             }
         }
     }
@@ -181,25 +181,25 @@ public enum Relation implements Permissable {
         if (isMember()) {
             return false;
         } else if (isEnemy()) {
-            return Conf.territoryEnemyDenyUsage;
+            return Config.CLAIMS_ENEMY_DENYUSAGE.getOption();
         } else if (isAlly()) {
-            return Conf.territoryAllyDenyUsage;
+            return Config.CLAIMS_ALLY_DENYUSAGE.getOption();
         } else if (isTruce()) {
-            return Conf.territoryTruceDenyUsage;
+            return Config.CLAIMS_TRUCE_DENYUSAGE.getOption();
         } else {
-            return Conf.territoryDenyUsage;
+            return Config.CLAIMS_DENYUSAGE.getOption();
         }
     }
 
     public double getRelationCost() {
         if (isEnemy()) {
-            return Conf.econCostEnemy;
+            return Config.ECON_COST_ENEMY.getDouble();
         } else if (isAlly()) {
-            return Conf.econCostAlly;
+            return Config.ECON_COST_ALLY.getDouble();
         } else if (isTruce()) {
-            return Conf.econCostTruce;
+            return Config.ECON_COST_TRUCE.getDouble();
         } else {
-            return Conf.econCostNeutral;
+            return Config.ECON_COST_NEUTRAL.getDouble();
         }
     }
 

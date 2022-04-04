@@ -6,6 +6,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.WarmUpUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.UUID;
 
 public class CmdFly extends FCommand {
 
-    public static final boolean fly = FactionsPlugin.getInstance().getConfig().getBoolean("enable-faction-flight");
     public static List<UUID> falseList = new ArrayList<>();
 
     /**
@@ -76,7 +76,7 @@ public class CmdFly extends FCommand {
                 context.msg(TL.COMMAND_FLY_NO_ACCESS, factionAtLocation.getTag(context.fPlayer));
             }
             return false;
-        } else if (!FactionsPlugin.getInstance().getConfig().getBoolean("ffly.enemies-near-disable-flight", true)) {
+        } else if (!Config.FLY_NEARBY_ENEMIES_CANCEL.getOption()) {
             context.fPlayer.checkIfNearbyEnemies();
             return false;
         }

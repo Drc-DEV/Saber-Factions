@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.alts;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
@@ -14,6 +13,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -40,7 +40,7 @@ public class CmdKickAlt extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("f-alts.Enabled", false)) {
+        if (!Config.FACTION_ALT_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Faction Alts");
             return;
         }
@@ -78,7 +78,7 @@ public class CmdKickAlt extends FCommand {
                 return;
             }
 
-            if (!Conf.canLeaveWithNegativePower && toKick.getPower() < 0) {
+            if (!Config.FACTION_NEGATIVEPOWER_LEAVE.getOption() && toKick.getPower() < 0) {
                 context.msg(TL.COMMAND_KICK_NEGATIVEPOWER);
                 return;
             }
@@ -93,10 +93,9 @@ public class CmdKickAlt extends FCommand {
             return;
         }
 
-
         // if economy is enabled, they're not on the bypass list, and this
         // command has a cost set, make sure they can pay
-        if (!context.canAffordCommand(Conf.econCostKick, TL.COMMAND_KICK_TOKICK.toString())) {
+        if (!context.canAffordCommand(Config.ECON_COST_KICK.getDouble(), TL.COMMAND_KICK_TOKICK.toString())) {
             return;
         }
 
@@ -109,7 +108,7 @@ public class CmdKickAlt extends FCommand {
 
 
         // then make 'em pay (if applicable)
-        if (!context.payForCommand(Conf.econCostKick, TL.COMMAND_KICK_TOKICK.toString(), TL.COMMAND_KICK_FORKICK.toString())) {
+        if (!context.payForCommand(Config.ECON_COST_KICK.getDouble(), TL.COMMAND_KICK_TOKICK.toString(), TL.COMMAND_KICK_FORKICK.toString())) {
             return;
         }
 
@@ -122,7 +121,7 @@ public class CmdKickAlt extends FCommand {
             context.msg(TL.COMMAND_KICK_KICKS, toKick.describeTo(context.fPlayer), toKickFaction.describeTo(context.fPlayer));
         }
 
-        if (Conf.logFactionKick) {
+        if (Config.LOG_FKICK.getOption()) {
             Logger.print((context.sender instanceof ConsoleCommandSender ? "A console command" : context.fPlayer.getName()) + " kicked " + toKick.getName() + " from the faction: " + toKickFaction.getTag(), Logger.PrefixType.DEFAULT);
         }
         // SHOULD NOT BE POSSIBLE BUT KEPT INCASE

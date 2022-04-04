@@ -6,6 +6,7 @@ import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.tag.FactionTag;
 import com.massivecraft.factions.tag.Tag;
 import com.massivecraft.factions.util.timer.TimerManager;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -38,12 +39,6 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
     @Override
     public String getAuthor() {
         return "drtshock";
-    }
-
-    // Since we are registering this expansion from the dependency, this can be null
-    @Override
-    public String getPlugin() {
-        return null;
     }
 
     // Return the plugin version since this expansion is bundled with the dependency
@@ -134,7 +129,7 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
             case "faction_claims":
                 return fPlayer.hasFaction() ? String.valueOf(faction.getAllClaims().size()) : "0";
             case "faction_maxclaims":
-                return String.valueOf(Conf.claimedLandsMax);
+                return String.valueOf(Config.FACTION_CLAIMS_LIMIT.getInt());
             case "faction_founded":
                 return TL.sdf.format(faction.getFoundedDate());
             case "faction_joining":
@@ -144,7 +139,7 @@ public class ClipPlaceholderAPIManager extends PlaceholderExpansion implements R
             case "faction_strikes":
                 return fPlayer.hasFaction() ? String.valueOf(faction.getStrikes()) : "0";
             case "faction_peaceful":
-                return faction.isPeaceful() ? Conf.colorNeutral + TL.COMMAND_SHOW_PEACEFUL.toString() : "";
+                return faction.isPeaceful() ? ChatColor.valueOf(Config.COLOR_NEUTRAL.getString()) + TL.COMMAND_SHOW_PEACEFUL.toString() : "";
             case "faction_tntbank_balance":
                 return String.valueOf(faction.getTnt());
             case "faction_tnt_max_balance":

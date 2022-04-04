@@ -1,10 +1,14 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.event.FactionDisbandEvent.PlayerDisbandReason;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Cooldown;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.frame.fdisband.FDisbandFrame;
@@ -79,7 +83,7 @@ public class CmdDisband extends FCommand {
         boolean access = context.fPlayer.getPlayer().hasMetadata("disband_confirm") && (time = context.fPlayer.getPlayer().getMetadata("disband_confirm").get(0).asLong()) != 0L && System.currentTimeMillis() - time <= TimeUnit.SECONDS.toMillis(3L);
 
         if (!access) {
-            if (Conf.useDisbandGUI && (!context.fPlayer.isAdminBypassing() || !context.player.isOp())) {
+            if (Config.FACTION_DISBANDGUI_USE.getOption() && (!context.fPlayer.isAdminBypassing() || !context.player.isOp())) {
                 if (!disbandMap.containsKey(context.player.getUniqueId().toString())) {
                     new FDisbandFrame(context.faction).buildGUI(context.fPlayer);
                     return;
@@ -93,12 +97,12 @@ public class CmdDisband extends FCommand {
             disbandMap.put(context.player.getUniqueId().toString(), faction.getId());
             Bukkit.getScheduler().scheduleSyncDelayedTask(FactionsPlugin.getInstance(), () -> disbandMap.remove(context.player.getUniqueId().toString()), 200L);
         } else if (faction.getId().equals(disbandMap.get(context.player.getUniqueId().toString())) || faction.getTnt() == 0) {
-            if (FactionsPlugin.getInstance().getConfig().getBoolean("faction-disband-broadcast", true)) {
+            if (Config.FACTION_BROADCAST_DISBAND.getOption()) {
 
                 String yours_message = TL.COMMAND_DISBAND_BROADCAST_YOURS.toString()
-                        .replace("{claims}",faction.getAllClaims().size()+"");
+                        .replace("{claims}", faction.getAllClaims().size() + "");
                 String notyours_message = TL.COMMAND_DISBAND_BROADCAST_NOTYOURS.toString()
-                        .replace("{claims}",faction.getAllClaims().size()+"");
+                        .replace("{claims}", faction.getAllClaims().size() + "");
 
                 for (FPlayer follower : FPlayers.getInstance().getOnlinePlayers()) {
                     String amountString = context.sender instanceof ConsoleCommandSender ? TL.GENERIC_SERVERADMIN.toString() : context.fPlayer.describeTo(follower);

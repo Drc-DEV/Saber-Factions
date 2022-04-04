@@ -9,6 +9,7 @@ import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.util.CC;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -87,7 +88,7 @@ public class FUpgradeFrame {
                 updateWarps(fac);
                 break;
             case SPAWNERCHUNKS:
-                if (Conf.allowSpawnerChunksUpgrade) {
+                if (Config.SPAWNERCHUNKS_ALLOW_UPGRADE.getOption()) {
                     updateSpawnerChunks(fac);
                     break;
                 }

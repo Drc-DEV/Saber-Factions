@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.persist.SaveTask;
 import com.massivecraft.factions.zcore.util.PermUtil;
 import com.massivecraft.factions.zcore.util.Persist;
@@ -96,8 +96,8 @@ public abstract class MPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.mPluginSecretPlayerListener, this);
 
         // Register recurring tasks
-        if (this.saveTask == null && Conf.saveToFileEveryXMinutes > 0.0) {
-            long saveTicks = (long) (1200.0 * Conf.saveToFileEveryXMinutes);
+        if (this.saveTask == null && Config.AUTOSAVE_INTERVAL_MINUTES.getInt() > 0.0) {
+            long saveTicks = 1200L * Config.AUTOSAVE_INTERVAL_MINUTES.getInt();
             this.saveTask = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, new SaveTask(this), saveTicks, saveTicks).getTaskId();
         }
         loadLang();
@@ -162,7 +162,7 @@ public abstract class MPlugin extends JavaPlugin {
         // Remove this here because I'm sick of dealing with bug reports due to bad decisions on my part.
         if (conf.getString(TL.COMMAND_SHOW_POWER.getPath(), "").contains("%5$s")) {
             conf.set(TL.COMMAND_SHOW_POWER.getPath(), TL.COMMAND_SHOW_POWER.getDefault());
-            Logger.print( "Removed errant format specifier from f show power.", Logger.PrefixType.DEFAULT);
+            Logger.print("Removed errant format specifier from f show power.", Logger.PrefixType.DEFAULT);
         }
 
         TL.setFile(conf);

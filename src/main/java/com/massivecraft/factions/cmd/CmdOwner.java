@@ -1,8 +1,12 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 
@@ -34,17 +38,17 @@ public class CmdOwner extends FCommand {
             return;
         }
 
-        if (!Conf.ownedAreasEnabled) {
+        if (!Config.OWNED_CHUNKS_ENABLED.getOption()) {
             context.msg(TL.COMMAND_OWNER_DISABLED);
             return;
         }
 
-        if (!hasBypass && Conf.ownedAreasLimitPerFaction > 0 && context.faction.getCountOfClaimsWithOwners() >= Conf.ownedAreasLimitPerFaction) {
-            context.msg(TL.COMMAND_OWNER_LIMIT, Conf.ownedAreasLimitPerFaction);
+        if (!hasBypass && Config.OWNED_CHUNKS_LIMIT.getInt() > 0 && context.faction.getCountOfClaimsWithOwners() >= Config.OWNED_CHUNKS_LIMIT.getInt()) {
+            context.msg(TL.COMMAND_OWNER_LIMIT, Config.OWNED_CHUNKS_LIMIT.getInt());
             return;
         }
 
-        if (!hasBypass && !context.assertMinRole(Conf.ownedAreasModeratorsCanSet ? Role.MODERATOR : Role.LEADER)) {
+        if (!hasBypass && !context.assertMinRole(Config.OWNED_CHUNKS_MODSCANSET.getOption() ? Role.MODERATOR : Role.LEADER)) {
             return;
         }
 
@@ -89,7 +93,7 @@ public class CmdOwner extends FCommand {
         }
 
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostOwner, TL.COMMAND_OWNER_TOSET, TL.COMMAND_OWNER_FORSET)) {
+        if (!context.payForCommand(Config.ECON_COST_OWNER.getDouble(), TL.COMMAND_OWNER_TOSET, TL.COMMAND_OWNER_FORSET)) {
             return;
         }
 

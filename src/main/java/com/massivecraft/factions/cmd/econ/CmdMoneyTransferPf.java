@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.econ;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
@@ -9,6 +8,7 @@ import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 
@@ -47,7 +47,7 @@ public class CmdMoneyTransferPf extends FCommand {
 
         boolean success = Econ.transferMoney(context.fPlayer, from, to, amount);
 
-        if (success && Conf.logMoneyTransactions) {
+        if (success && Config.LOG_ECONOMY.getOption()) {
             Logger.printArgs(TL.COMMAND_MONEYTRANSFERPF_TRANSFER.toString(), Logger.PrefixType.WARNING, context.fPlayer.getName(), Econ.moneyString(amount), from.describeTo(null), to.describeTo(null));
         }
     }

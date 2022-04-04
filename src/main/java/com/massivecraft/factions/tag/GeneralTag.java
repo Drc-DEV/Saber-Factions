@@ -3,6 +3,7 @@ package com.massivecraft.factions.tag;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.util.timer.TimerManager;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
 
@@ -10,11 +11,8 @@ import java.util.function.Supplier;
 
 public enum GeneralTag implements Tag {
 
-    /**
-     * @author FactionsUUID Team - Modified By CmdrKittens
-     */
     GRACE_TIMER("{grace-time}", () -> String.valueOf(TimerManager.getRemaining(FactionsPlugin.getInstance().getTimerManager().graceTimer.getRemaining(), true))),
-    MAX_WARPS("{max-warps}", () -> String.valueOf(FactionsPlugin.getInstance().getConfig().getInt("max-warps", 5))),
+    MAX_WARPS("{max-warps}", () -> String.valueOf(Config.FACTION_WARPS_LIMIT.getInt())),
     MAX_ALLIES("{max-allies}", () -> getRelation("ally")),
     MAX_ENEMIES("{max-enemies}", () -> getRelation("enemy")),
     MAX_TRUCES("{max-truces}", () -> getRelation("truce")),

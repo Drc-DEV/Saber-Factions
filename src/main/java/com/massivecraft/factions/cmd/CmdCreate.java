@@ -10,9 +10,9 @@ import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Cooldown;
 import com.massivecraft.factions.util.Logger;
 import com.massivecraft.factions.util.MiscUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 
@@ -67,7 +67,7 @@ public class CmdCreate extends FCommand {
         }
 
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make sure they can pay
-        if (!context.canAffordCommand(Conf.econCostCreate, TL.COMMAND_CREATE_TOCREATE.toString())) {
+        if (!context.canAffordCommand(Config.ECON_COST_CREATE.getDouble(), TL.COMMAND_CREATE_TOCREATE.toString())) {
             return;
         }
 
@@ -79,7 +79,7 @@ public class CmdCreate extends FCommand {
         }
 
         // then make 'em pay (if applicable)
-        if (!context.payForCommand(Conf.econCostCreate, TL.COMMAND_CREATE_TOCREATE, TL.COMMAND_CREATE_FORCREATE)) {
+        if (!context.payForCommand(Config.ECON_COST_CREATE.getDouble(), TL.COMMAND_CREATE_TOCREATE, TL.COMMAND_CREATE_FORCREATE)) {
             return;
         }
 
@@ -108,23 +108,24 @@ public class CmdCreate extends FCommand {
         context.fPlayer.setRole(Role.LEADER);
 
         Cooldown.setCooldown(context.fPlayer.getPlayer(), "createCooldown", FactionsPlugin.getInstance().getConfig().getInt("fcooldowns.f-create"));
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("faction-creation-broadcast", true)) {
+        if (Config.FACTION_BROADCAST_CREATE.getOption()) {
             for (FPlayer follower : FPlayers.getInstance().getOnlinePlayers()) {
                 follower.msg(TL.COMMAND_CREATE_CREATED, context.fPlayer.getName(), faction.getTag(follower));
             }
         }
         context.msg(TL.COMMAND_CREATE_YOUSHOULD, FactionsPlugin.getInstance().cmdBase.cmdDescription.getUsageTemplate(context));
-        if (Conf.econEnabled) Econ.setBalance(faction.getAccountId(), Conf.econFactionStartingBalance);
-        if (Conf.logFactionCreate)
+        if (Config.ECON_ENABLED.getOption())
+            Econ.setBalance(faction.getAccountId(), Config.ECON_START_BALANCE.getDouble());
+        if (Config.LOG_FCREATE.getOption())
             Logger.print(context.fPlayer.getName() + TL.COMMAND_CREATE_CREATEDLOG + tag, Logger.PrefixType.DEFAULT);
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("fpaypal.Enabled"))
+        if (Config.FACTION_PAYPAL_ENABLED.getOption())
             context.msg(TL.COMMAND_PAYPALSET_CREATED);
-        if(Conf.allFactionsPeaceful) {
+        if (Config.FACTION_ALL_PEACEFUL.getOption()) {
             faction.setPeaceful(true);
             faction.setPeacefulExplosionsEnabled(false);
         }
         if (Conf.useCustomDefaultPermissions) faction.setDefaultPerms();
-        if (Conf.usePermissionHints) context.msg(TL.COMMAND_HINT_PERMISSION);
+        if (Config.SEND_PERMISSION_HINTS.getOption()) context.msg(TL.COMMAND_HINT_PERMISSION);
     }
 
     @Override

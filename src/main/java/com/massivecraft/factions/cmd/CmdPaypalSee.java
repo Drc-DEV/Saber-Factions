@@ -3,6 +3,7 @@ package com.massivecraft.factions.cmd;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdPaypalSee extends FCommand {
@@ -23,7 +24,7 @@ public class CmdPaypalSee extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("fpaypal.Enabled")) {
+        if (!Config.FACTION_PAYPAL_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Faction Paypals");
             return;
         }

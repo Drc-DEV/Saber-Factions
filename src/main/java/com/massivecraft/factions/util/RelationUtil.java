@@ -1,10 +1,10 @@
 package com.massivecraft.factions.util;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.iface.RelationParticipator;
 import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TextUtil;
 import org.bukkit.ChatColor;
@@ -99,11 +99,11 @@ public class RelationUtil {
 
         if (thatFaction != null && thatFaction != getFaction(me)) {
             if (thatFaction.isPeaceful())
-                return Conf.colorPeaceful;
+                return ChatColor.valueOf(Config.COLOR_PEACEFUL.getString());
             else if (thatFaction.isSafeZone())
-                return Conf.colorPeaceful;
+                return ChatColor.valueOf(Config.COLOR_PEACEFUL.getString());
             else if (thatFaction.isWarZone())
-                return Conf.colorWar;
+                return ChatColor.valueOf(Config.COLOR_WARZONE.getString());
         }
 
         return getRelationTo(that, me).getColor();

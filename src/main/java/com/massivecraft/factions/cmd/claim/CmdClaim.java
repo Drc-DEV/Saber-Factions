@@ -1,6 +1,9 @@
 package com.massivecraft.factions.cmd.claim;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
@@ -10,6 +13,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.SpiralTask;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -56,8 +60,8 @@ public class CmdClaim extends FCommand {
             return;
         }
 
-        if(radius > Conf.claimRadiusLimit && Conf.claimRadiusLimit != -1 && !context.fPlayer.isAdminBypassing()) {
-            context.msg(TL.COMMAND_CLAIM_RADIUSOVER, Conf.claimRadiusLimit);
+        if (radius > Config.FACTION_CLAIMRADIUS_LIMIT.getInt() && Config.FACTION_CLAIMRADIUS_LIMIT.getInt() != -1 && !context.fPlayer.isAdminBypassing()) {
+            context.msg(TL.COMMAND_CLAIM_RADIUSOVER, Config.FACTION_CLAIMRADIUS_LIMIT.getInt());
             return;
         }
 
@@ -81,7 +85,7 @@ public class CmdClaim extends FCommand {
                 return;
             }
             new SpiralTask(new FLocation(context.player), radius) {
-                private final int limit = Conf.radiusClaimFailureLimit - 1;
+                private final int limit = Config.FACTION_CLAIMRADIUS_LIMIT.getInt() - 1;
                 private int failCount = 0;
                 private int successfulClaims = 0;
 

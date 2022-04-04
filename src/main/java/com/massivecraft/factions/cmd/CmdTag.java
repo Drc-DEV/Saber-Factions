@@ -8,6 +8,7 @@ import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Cooldown;
 import com.massivecraft.factions.util.MiscUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
 
@@ -52,7 +53,7 @@ public class CmdTag extends FCommand {
             }
 
             // if economy is enabled, they're not on the bypass list, and this command has a cost set, make sure they can pay
-            if (!context.canAffordCommand(Conf.econCostTag, TL.COMMAND_TAG_TOCHANGE.toString())) {
+            if (!context.canAffordCommand(Config.ECON_COST_RENAME.getDouble(), TL.COMMAND_TAG_TOCHANGE.toString())) {
                 return;
             }
 
@@ -70,7 +71,7 @@ public class CmdTag extends FCommand {
                 }
 
                 // then make 'em pay (if applicable)
-                if (!context.payForCommand(Conf.econCostTag, TL.COMMAND_TAG_TOCHANGE, TL.COMMAND_TAG_FORCHANGE)) {
+                if (!context.payForCommand(Config.ECON_COST_RENAME.getDouble(), TL.COMMAND_TAG_TOCHANGE, TL.COMMAND_TAG_FORCHANGE)) {
                     return;
                 }
 
@@ -89,7 +90,7 @@ public class CmdTag extends FCommand {
                         continue;
                     }
                     // Broadcast the tag change (if applicable)
-                    if (Conf.broadcastTagChanges) {
+                    if (Config.FACTION_TAG_BROADCAST_CHANGES.getOption()) {
                         Faction faction = fplayer.getFaction();
                         fplayer.msg(TL.COMMAND_TAG_CHANGED, context.fPlayer.getColorTo(faction) + oldtag, context.faction.getTag(faction));
                     }

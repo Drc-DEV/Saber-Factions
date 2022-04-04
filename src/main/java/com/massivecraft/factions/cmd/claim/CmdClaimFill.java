@@ -5,7 +5,6 @@ package com.massivecraft.factions.cmd.claim;
  */
 
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.Aliases;
@@ -13,6 +12,7 @@ import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -31,7 +31,7 @@ public class CmdClaimFill extends FCommand {
         this.aliases.addAll(Aliases.claim_claimFill);
 
         // Args
-        this.optionalArgs.put("limit", String.valueOf(Conf.maxFillClaimCount));
+        this.optionalArgs.put("limit", String.valueOf(Config.FACTION_FILLCLAIM_MAXCOUNT.getInt()));
         this.optionalArgs.put("faction", "you");
 
         this.requirements = new CommandRequirements.Builder(Permission.CLAIM_FILL)
@@ -42,10 +42,10 @@ public class CmdClaimFill extends FCommand {
     @Override
     public void perform(CommandContext context) {
         // Args
-        final int limit = context.argAsInt(0, Conf.maxFillClaimCount);
+        final int limit = context.argAsInt(0, Config.FACTION_FILLCLAIM_MAXCOUNT.getInt());
 
-        if (limit > Conf.maxFillClaimCount) {
-            context.msg(TL.COMMAND_CLAIMFILL_ABOVEMAX, Conf.maxFillClaimCount);
+        if (limit > Config.FACTION_FILLCLAIM_MAXCOUNT.getInt()) {
+            context.msg(TL.COMMAND_CLAIMFILL_ABOVEMAX, Config.FACTION_FILLCLAIM_MAXCOUNT.getInt());
             return;
         }
 
@@ -70,7 +70,7 @@ public class CmdClaimFill extends FCommand {
             return;
         }
 
-        final double distance = Conf.maxFillClaimDistance;
+        final double distance = Config.FACTION_FILLCLAIM_MAXDISTANCE.getDouble();
         long startX = loc.getX();
         long startZ = loc.getZ();
 
@@ -103,7 +103,7 @@ public class CmdClaimFill extends FCommand {
             return;
         }
 
-        final int limFail = Conf.radiusClaimFailureLimit;
+        final int limFail = Config.FACTION_CLAIMRADIUS_TRIES.getInt();
         int fails = 0;
         for (FLocation currentLocation : toClaim) {
             if (!context.fPlayer.attemptClaim(forFaction, currentLocation, true)) {

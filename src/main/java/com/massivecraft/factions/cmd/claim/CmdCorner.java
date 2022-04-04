@@ -1,13 +1,17 @@
 package com.massivecraft.factions.cmd.claim;
 
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.CornerTask;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
 
@@ -46,8 +50,8 @@ public class CmdCorner extends FCommand {
             } else {
                 context.msg(TL.COMMAND_CORNER_ATTEMPTING_CLAIM);
                 List<FLocation> surrounding = new ArrayList<>(400);
-                for (int x = 0; x < Conf.factionBufferSize; ++x) {
-                    for (int z = 0; z < Conf.factionBufferSize; ++z) {
+                for (int x = 0; x < Config.FACTION_BUFFER_SIZE.getInt(); ++x) {
+                    for (int z = 0; z < Config.FACTION_BUFFER_SIZE.getInt(); ++z) {
                         int newX = (int) ((to.getX() > 0L) ? (to.getX() - x) : (to.getX() + x));
                         int newZ = (int) ((to.getZ() > 0L) ? (to.getZ() - z) : (to.getZ() + z));
                         FLocation location = new FLocation(context.player.getWorld().getName(), newX, newZ);

@@ -4,6 +4,7 @@ import com.massivecraft.factions.*;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.WarmUpUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -25,7 +26,7 @@ public class CmdCheckpoint extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("checkpoints.Enabled")) {
+        if (!Config.FACTION_CHECKPOINTS_ENABLED.getOption()) {
             context.msg(TL.COMMAND_CHECKPOINT_DISABLED);
             return;
         }
@@ -47,7 +48,6 @@ public class CmdCheckpoint extends FCommand {
             Access access = context.faction.getAccess(context.fPlayer, action);
             if (access == Access.DENY) {
                 context.msg(TL.GENERIC_FPERM_NOPERMISSION, action.getName());
-                return;
             } else {
                 FLocation myLocation = new FLocation(context.player.getLocation());
                 Faction myLocFaction = Board.getInstance().getFactionAt(myLocation);
@@ -57,8 +57,8 @@ public class CmdCheckpoint extends FCommand {
                 } else {
                     context.msg(TL.COMMAND_CHECKPOINT_INVALIDLOCATION);
                 }
-                return;
             }
+            return;
         }
 
         if (context.faction.getCheckpoint() == null) {

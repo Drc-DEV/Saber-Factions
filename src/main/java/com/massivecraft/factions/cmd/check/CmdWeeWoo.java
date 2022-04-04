@@ -1,10 +1,12 @@
 package com.massivecraft.factions.cmd.check;
 
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdWeeWoo extends FCommand {
@@ -17,7 +19,7 @@ public class CmdWeeWoo extends FCommand {
         this.aliases.addAll(Aliases.weewoo);
         this.requiredArgs.add("start/stop");
 
-        this.requirements = new CommandRequirements.Builder(Permission.CHECK)
+        this.requirements = new CommandRequirements.Builder(Permission.WEEWOO)
                 .playerOnly()
                 .memberOnly()
                 .build();
@@ -36,6 +38,7 @@ public class CmdWeeWoo extends FCommand {
             }
             context.faction.setWeeWoo(true);
             context.msg(TL.COMMAND_WEEWOO_STARTED, context.fPlayer.getNameAndTag());
+            new WeeWooTask(context.faction).runTaskTimerAsynchronously(FactionsPlugin.getInstance(), 20L, Config.FACTION_WEEWOO_INTERVAL_SECONDS.getInt() * 20L);
         } else if (argument.equalsIgnoreCase("stop")) {
             if (!weewoo) {
                 context.msg(TL.COMMAND_WEEWOO_ALREADY_STOPPED);

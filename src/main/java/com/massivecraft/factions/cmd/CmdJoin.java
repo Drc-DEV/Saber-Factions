@@ -1,9 +1,13 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.frame.fupgrades.UpgradeType;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
@@ -49,7 +53,7 @@ public class CmdJoin extends FCommand {
                 return;
             }
 
-            if (!faction.altInvited(fplayer) && Conf.factionMemberLimit > 0 && faction.getFPlayers().size() >= getFactionMemberLimit(faction)) {
+            if (!faction.altInvited(fplayer) && Config.FACTION_MEMBER_LIMIT.getInt() > 0 && faction.getFPlayers().size() >= getFactionMemberLimit(faction)) {
                 context.msg(TL.COMMAND_JOIN_ATLIMIT_MEMBERS, faction.getTag(context.fPlayer), getFactionMemberLimit(faction), fplayer.describeTo(context.fPlayer, false));
                 return;
             }
@@ -59,7 +63,7 @@ public class CmdJoin extends FCommand {
                 return;
             }
 
-            if (!Conf.canLeaveWithNegativePower && fplayer.getPower() < 0) {
+            if (!Config.FACTION_NEGATIVEPOWER_LEAVE.getOption() && fplayer.getPower() < 0) {
                 context.msg(TL.COMMAND_JOIN_NEGATIVEPOWER, fplayer.describeTo(context.fPlayer, true));
                 return;
             }
@@ -72,7 +76,7 @@ public class CmdJoin extends FCommand {
                 return;
             }
 
-            int altLimit = Conf.factionAltMemberLimit;
+            int altLimit = Config.FACTION_ALT_LIMIT.getInt();
 
             if (altLimit > 0 && faction.getAltPlayers().size() >= altLimit && faction.altInvited(context.fPlayer)) {
                 context.msg(TL.COMMAND_JOIN_ATLIMIT_ALTS, faction.getTag(context.fPlayer), altLimit, fplayer.describeTo(context.fPlayer, false));
@@ -80,7 +84,7 @@ public class CmdJoin extends FCommand {
             }
 
             // if economy is enabled, they're not on the bypass list, and this command has a cost set, make sure they can pay
-            if (samePlayer && !context.canAffordCommand(Conf.econCostJoin, TL.COMMAND_JOIN_TOJOIN.toString())) {
+            if (samePlayer && !context.canAffordCommand(Config.ECON_COST_JOIN.getDouble(), TL.COMMAND_JOIN_TOJOIN.toString())) {
                 return;
             }
 
@@ -100,7 +104,7 @@ public class CmdJoin extends FCommand {
                 }
 
                 // then make 'em pay (if applicable)
-                if (samePlayer && !context.payForCommand(Conf.econCostJoin, TL.COMMAND_JOIN_TOJOIN.toString(), TL.COMMAND_JOIN_FORJOIN.toString())) {
+                if (samePlayer && !context.payForCommand(Config.ECON_COST_JOIN.getDouble(), TL.COMMAND_JOIN_TOJOIN.toString(), TL.COMMAND_JOIN_FORJOIN.toString())) {
                     return;
                 }
 
@@ -124,7 +128,7 @@ public class CmdJoin extends FCommand {
                 faction.deinvite(fplayer);
                 context.fPlayer.setRole(faction.getDefaultRole());
 
-                if (Conf.logFactionJoin) {
+                if (Config.LOG_FJOIN.getOption()) {
                     if (samePlayer) {
                         Logger.printArgs(TL.COMMAND_JOIN_JOINEDLOG.toString(), Logger.PrefixType.DEFAULT, fplayer.getName(), faction.getTag());
                     } else {
@@ -136,8 +140,8 @@ public class CmdJoin extends FCommand {
     }
 
     private int getFactionMemberLimit(Faction f) {
-        if (f.getUpgrade(UpgradeType.MEMBERS) == 0) return Conf.factionMemberLimit;
-        return Conf.factionMemberLimit + FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig().getInt("fupgrades.MainMenu.Members.Members-Limit.level-" + f.getUpgrade(UpgradeType.MEMBERS));
+        if (f.getUpgrade(UpgradeType.MEMBERS) == 0) return Config.FACTION_MEMBER_LIMIT.getInt();
+        return Config.FACTION_MEMBER_LIMIT.getInt() + FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig().getInt("fupgrades.MainMenu.Members.Members-Limit.level-" + f.getUpgrade(UpgradeType.MEMBERS));
     }
 
     @Override

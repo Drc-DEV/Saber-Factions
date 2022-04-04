@@ -1,12 +1,12 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Cooldown;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdOpen extends FCommand {
@@ -30,7 +30,7 @@ public class CmdOpen extends FCommand {
     @Override
     public void perform(CommandContext context) {
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostOpen, TL.COMMAND_OPEN_TOOPEN, TL.COMMAND_OPEN_FOROPEN)) {
+        if (!context.payForCommand(Config.ECON_COST_OPEN.getDouble(), TL.COMMAND_OPEN_TOOPEN, TL.COMMAND_OPEN_FOROPEN)) {
             return;
         }
 
@@ -50,10 +50,10 @@ public class CmdOpen extends FCommand {
                 Cooldown.setCooldown(fplayer.getPlayer(), "openCooldown", FactionsPlugin.getInstance().getConfig().getInt("fcooldowns.f-open"));
                 continue;
             }
-            if (!FactionsPlugin.getInstance().getConfig().getBoolean("faction-open-broadcast")) return;
+            if (!Config.FACTION_BROADCAST_OPEN.getOption()) return;
             fplayer.msg(TL.COMMAND_OPEN_CHANGED, context.faction.getTag(fplayer.getFaction()), open);
         }
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("faction-open-broadcast")) {
+        if (!Config.FACTION_BROADCAST_OPEN.getOption()) {
             for (FPlayer fPlayer : context.faction.getFPlayersWhereOnline(true)) {
                 fPlayer.msg(TL.COMMAND_OPEN_CHANGED, context.faction.getTag(fPlayer.getFaction()), open);
             }

@@ -1,9 +1,9 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TextUtil;
 
@@ -33,16 +33,14 @@ public class CmdTitle extends FCommand {
         }
 
         context.args.remove(0);
-        String title = TextUtil.implode(context.args, " ");
-
-        title = title.replaceAll(",", "");
+        String title = TextUtil.implode(context.args, " ").replace(",", "");
 
         if (!context.canIAdministerYou(context.fPlayer, you)) {
             return;
         }
 
         // if economy is enabled, they're not on the bypass list, and this command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostTitle, TL.COMMAND_TITLE_TOCHANGE, TL.COMMAND_TITLE_FORCHANGE)) {
+        if (!context.payForCommand(Config.ECON_COST_TITLE.getDouble(), TL.COMMAND_TITLE_TOCHANGE, TL.COMMAND_TITLE_FORCHANGE)) {
             return;
         }
 

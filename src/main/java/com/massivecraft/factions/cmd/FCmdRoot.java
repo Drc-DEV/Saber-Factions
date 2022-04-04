@@ -1,10 +1,8 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.alts.CmdAlts;
 import com.massivecraft.factions.cmd.audit.CmdAudit;
-import com.massivecraft.factions.cmd.check.CmdCheck;
 import com.massivecraft.factions.cmd.check.CmdWeeWoo;
 import com.massivecraft.factions.cmd.chest.CmdChest;
 import com.massivecraft.factions.cmd.claim.*;
@@ -24,6 +22,7 @@ import com.massivecraft.factions.cmd.tnt.CmdTnt;
 import com.massivecraft.factions.cmd.tnt.CmdTntFill;
 import com.massivecraft.factions.missions.CmdMissions;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import me.lucko.commodore.CommodoreProvider;
 import org.bukkit.Bukkit;
@@ -132,7 +131,6 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
     public CmdBanner cmdBanner = new CmdBanner();
     public CmdTpBanner cmdTpBanner = new CmdTpBanner();
     public CmdKillHolograms cmdKillHolograms = new CmdKillHolograms();
-    //public CmdInspect cmdInspect = new CmdInspect();
     public CmdCoords cmdCoords = new CmdCoords();
     public CmdShowClaims cmdShowClaims = new CmdShowClaims();
     public CmdLowPower cmdLowPower = new CmdLowPower();
@@ -148,7 +146,6 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
     //public CmdLogout cmdLogout = new CmdLogout();
     public CmdMissions cmdMissions = new CmdMissions();
     public CmdStrikes cmdStrikes = new CmdStrikes();
-    public CmdCheck cmdCheck = new CmdCheck();
     public CmdWeeWoo cmdWeeWoo = new CmdWeeWoo();
     public CmdSpawnerLock cmdSpawnerLock = new CmdSpawnerLock();
     public CmdSetDiscord cmdSetDiscord = new CmdSetDiscord();
@@ -193,7 +190,7 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
         if (CommodoreProvider.isSupported()) brigadierManager = new BrigadierManager();
 
 
-        this.aliases.addAll(Conf.baseCommandAliases);
+        this.aliases.addAll(Config.CMD_ALIASES.getStringList());
         this.aliases.removeAll(Collections.<String>singletonList(null));
 
         this.setHelpShort("The faction base command");
@@ -305,6 +302,7 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
         this.addSubCommand(this.cmdFriendlyFire);
         this.addSubCommand(this.cmdSetPower);
         this.addSubCommand(this.cmdSetTnt);
+        this.addSubCommand(this.cmdWeeWoo);
         addVariableCommands();
         if (CommodoreProvider.isSupported()) brigadierManager.build();
     }
@@ -314,56 +312,42 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
      */
     public void addVariableCommands() {
         //Discord
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("fdiscord.Enabled") && !discordEnabled) {
+        if (Config.FACTION_DISCORD_ENABLED.getOption() && !discordEnabled) {
             this.addSubCommand(this.cmdSetDiscord);
             this.addSubCommand(this.cmdSeeDiscord);
             discordEnabled = true;
         }
         //Reserve
-        if (Conf.useReserveSystem) {
+        if (Config.FACTION_RESERVE_ENABLED.getOption()) {
             this.addSubCommand(this.cmdReserve);
         }
 
         //PayPal
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("fpaypal.Enabled", false) && !fPayPalEnabled) {
+        if (Config.FACTION_PAYPAL_ENABLED.getOption() && !fPayPalEnabled) {
             this.addSubCommand(this.cmdPaypalSet);
             this.addSubCommand(this.cmdPaypalSee);
             fPayPalEnabled = true;
         }
-        //Check
-        if (Conf.useCheckSystem && !checkEnabled) {
-            this.addSubCommand(this.cmdCheck);
-            this.addSubCommand(this.cmdWeeWoo);
-            checkEnabled = true;
-        }
-        //CoreProtect
-        //if (Bukkit.getServer().getPluginManager().getPlugin("CoreProtect") != null && !coreProtectEnabled) {
-        //    FactionsPlugin.getInstance().log("Found CoreProtect, enabling Inspect");
-        //    this.addSubCommand(this.cmdInspect);
-        //    coreProtectEnabled = true;
-        //} else {
-        //    FactionsPlugin.getInstance().log("CoreProtect not found, disabling Inspect");
-        //}
         //FTOP
         if ((Bukkit.getServer().getPluginManager().getPlugin("FactionsTop") != null || Bukkit.getServer().getPluginManager().getPlugin("SavageFTOP") != null || Bukkit.getServer().getPluginManager().getPlugin("SaberFTOP") != null) && !internalFTOPEnabled) {
-            Logger.print( "Found FactionsTop plugin. Disabling our own /f top command.", Logger.PrefixType.DEFAULT);
+            Logger.print("Found FactionsTop plugin. Disabling our own /f top command.", Logger.PrefixType.DEFAULT);
         } else {
-            Logger.print( "Internal Factions Top Being Used. NOTE: Very Basic", Logger.PrefixType.DEFAULT);
+            Logger.print("Internal Factions Top Being Used. NOTE: Very Basic", Logger.PrefixType.DEFAULT);
             this.addSubCommand(this.cmdTop);
             internalFTOPEnabled = true;
         }
 
-        if (Conf.useAuditSystem) {
+        if (Config.FACTION_AUDIT_ENABLED.getOption()) {
             this.addSubCommand(cmdAudit);
             fAuditEnabled = true;
         }
 
-        if (Conf.useStrikeSystem) {
+        if (Config.FACTION_STRIKE_ENABLED.getOption()) {
             this.addSubCommand(this.cmdStrikes);
             fStrikes = true;
         }
 
-        if (Conf.userSpawnerChunkSystem) {
+        if (Config.SPAWNERCHUNKS_ENABLED.getOption()) {
             this.addSubCommand(this.cmdSpawnerChunk);
         }
 
@@ -379,11 +363,11 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
             this.addSubCommand(this.cmdPoints);
             fPointsEnabled = true;
         }
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("f-alts.Enabled", false) && !fAltsEnabled) {
+        if (Config.FACTION_ALT_ENABLED.getOption() && !fAltsEnabled) {
             this.addSubCommand(this.cmdAlts);
             fAltsEnabled = true;
         }
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("f-grace.Enabled", false) && !fGraceEnabled) {
+        if (Config.FACTION_GRACE_ENABLED.getOption() && !fGraceEnabled) {
             this.addSubCommand(this.cmdGrace);
             fGraceEnabled = true;
         }
@@ -391,7 +375,7 @@ public class FCmdRoot extends FCommand implements CommandExecutor {
             addSubCommand(this.cmdFocus);
             fFocusEnabled = true;
         }
-        if (FactionsPlugin.getInstance().getConfig().getBoolean("enable-faction-flight", true) && !fFlyEnabled) {
+        if (Config.FLY_ENABLED.getOption() && !fFlyEnabled) {
             this.addSubCommand(this.cmdFly);
             fFlyEnabled = true;
         }

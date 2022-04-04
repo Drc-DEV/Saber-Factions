@@ -1,7 +1,6 @@
 package com.massivecraft.factions.cmd.claim;
 
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
@@ -10,6 +9,7 @@ import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -23,7 +23,6 @@ public class CmdSafeunclaimall extends FCommand {
     public CmdSafeunclaimall() {
         this.aliases.addAll(Aliases.unclaim_all_safe);
         this.optionalArgs.put("world", "all");
-
         this.requirements = new CommandRequirements.Builder(Permission.MANAGE_SAFE_ZONE)
                 .build();
     }
@@ -31,14 +30,10 @@ public class CmdSafeunclaimall extends FCommand {
     @Override
     public void perform(CommandContext context) {
         FactionsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(FactionsPlugin.instance, () -> {
-
-
             String worldName = context.argAsString(0);
             World world = null;
-
-            if (worldName != null) {
+            if (worldName != null)
                 world = Bukkit.getWorld(worldName);
-            }
 
             String id = Factions.getInstance().getSafeZone().getId();
 
@@ -50,7 +45,7 @@ public class CmdSafeunclaimall extends FCommand {
 
             context.msg(TL.COMMAND_SAFEUNCLAIMALL_UNCLAIMED);
 
-            if (Conf.logLandUnclaims) {
+            if (Config.LOG_FUNCLAIM.getOption()) {
                 Logger.print(TL.COMMAND_SAFEUNCLAIMALL_UNCLAIMEDLOG.format(context.sender.getName()), Logger.PrefixType.DEFAULT);
             }
         });

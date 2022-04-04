@@ -1,10 +1,10 @@
 package com.massivecraft.factions.cmd.econ;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class CmdMoney extends FCommand {
@@ -39,7 +39,7 @@ public class CmdMoney extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!Conf.econEnabled || !Conf.bankEnabled) {
+        if (!Config.ECON_ENABLED.getOption() || !Config.ECON_BANK_ENABLED.getOption()) {
             context.msg(TL.ECON_OFF, "economy option is enabled, please set 'econEnabled' to true in conf.json");
             return;
         }

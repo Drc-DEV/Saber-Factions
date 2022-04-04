@@ -1,7 +1,11 @@
 package com.massivecraft.factions.util;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.zcore.config.Config;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -17,13 +21,13 @@ public class AutoLeaveProcessTask extends BukkitRunnable {
     public AutoLeaveProcessTask() {
         ArrayList<FPlayer> fplayers = (ArrayList<FPlayer>) FPlayers.getInstance().getAllFPlayers();
         this.iterator = fplayers.listIterator();
-        this.toleranceMillis = Conf.autoLeaveAfterDaysOfInactivity * 24 * 60 * 60 * 1000;
+        this.toleranceMillis = Config.AUTOPURGE_INACTIVITY_DAYS.getInt() * 24 * 60 * 60 * 1000;
         this.readyToGo = true;
         this.finished = false;
     }
 
     public void run() {
-        if (Conf.autoLeaveAfterDaysOfInactivity <= 0.0 || Conf.autoLeaveRoutineMaxMillisecondsPerTick <= 0.0) {
+        if (Config.AUTOPURGE_INACTIVITY_DAYS.getInt() <= 0.0) {
             this.stop();
             return;
         }
@@ -40,7 +44,7 @@ public class AutoLeaveProcessTask extends BukkitRunnable {
             long now = System.currentTimeMillis();
 
             // if this iteration has been running for maximum time, stop to take a breather until next tick
-            if (now > loopStartTime + Conf.autoLeaveRoutineMaxMillisecondsPerTick) {
+            if (now > loopStartTime + 5) {
                 readyToGo = true;
                 return;
             }
@@ -53,7 +57,7 @@ public class AutoLeaveProcessTask extends BukkitRunnable {
                 continue;
             }
             if (fplayer.hasFaction() && fplayer.isOffline() && now - fplayer.getLastLoginTime() > toleranceMillis) {
-                if (Conf.logFactionLeave || Conf.logFactionKick) {
+                if (Config.LOG_FLEAVE.getOption() || Config.LOG_FKICK.getOption()) {
                     FactionsPlugin.getInstance().getServer().getScheduler().runTaskAsynchronously(FactionsPlugin.instance, () -> Logger.print("Player " + fplayer.getName() + " was auto-removed due to inactivity.", Logger.PrefixType.DEFAULT));
                 }
 
@@ -67,7 +71,7 @@ public class AutoLeaveProcessTask extends BukkitRunnable {
 
                 fplayer.leave(false);
                 iterator.remove();  // go ahead and remove this list's link to the FPlayer object
-                if (Conf.autoLeaveDeleteFPlayerData) {
+                if (Config.AUTOPURGE_REMOVE_DATA.getOption()) {
                     fplayer.remove();
                 }
             }

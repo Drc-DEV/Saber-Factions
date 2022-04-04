@@ -22,11 +22,12 @@ import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.*;
 import com.massivecraft.factions.util.adapters.*;
-import com.massivecraft.factions.util.flight.FlightEnhance;
-import com.massivecraft.factions.util.flight.stuct.AsyncPlayerMap;
+import com.massivecraft.factions.util.tasks.FactionsTask;
 import com.massivecraft.factions.util.timer.TimerManager;
 import com.massivecraft.factions.zcore.CommandVisibility;
 import com.massivecraft.factions.zcore.MPlugin;
+import com.massivecraft.factions.zcore.config.Config;
+import com.massivecraft.factions.zcore.config.file.ConfigFile;
 import com.massivecraft.factions.zcore.file.impl.FileManager;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.Permissable;
@@ -48,6 +49,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import pro.dracarys.configlib.ConfigLib;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -71,9 +73,7 @@ public class FactionsPlugin extends MPlugin {
     // Commands
     public FCmdRoot cmdBase;
     public CmdAutoHelp cmdAutoHelp;
-    private AsyncPlayerMap asyncPlayerMap;
     public short version;
-    public boolean useNonPacketParticles = false;
     public List<String> itemList = getConfig().getStringList("fchest.Items-Not-Allowed");
     public boolean hookedPlayervaults;
     public FLogManager fLogManager;
@@ -85,7 +85,6 @@ public class FactionsPlugin extends MPlugin {
     private Integer AutoLeaveTask = null;
     private ClipPlaceholderAPIManager clipPlaceholderAPIManager;
     private boolean mvdwPlaceholderAPIManager = false;
-    private Listener[] eventsListener;
     private Worldguard wg;
     public LunarClientAPI lunarClientAPI;
 
@@ -132,15 +131,14 @@ public class FactionsPlugin extends MPlugin {
             return;
         }
 
+        ConfigLib.setPlugin(this);
+        ConfigLib.addFile(new ConfigFile());
+
         saveDefaultConfig();
         this.reloadConfig();
 
         // Load Conf from disk
         Conf.load();
-
-        if (getConfig().getBoolean("enable-faction-flight", true)) {
-            Bukkit.getServer().getScheduler().runTaskTimer(FactionsPlugin.getInstance(), new FlightEnhance(), 30L, 30L);
-        }
 
         StartupParameter.initData(this);
 
@@ -152,23 +150,24 @@ public class FactionsPlugin extends MPlugin {
 
         setupPermissions();
 
-        if (Conf.worldGuardChecking || Conf.worldGuardBuildPriority) wg = new Worldguard();
+        if (Config.WORLDGUARD_ENABLED.getOption() || Config.WORLDGUARD_BUILD_PRIORITY.getOption())
+            wg = new Worldguard();
 
         // start up task which runs the autoLeaveAfterDaysOfInactivity routine
         startAutoLeaveTask(false);
 
-        if (Conf.usePreStartupKickSystem) {
+        if (Config.PRE_STARTUP_KICK.getOption()) {
             getServer().getPluginManager().registerEvents(new LoginRegistry(), this);
         }
         getServer().getPluginManager().registerEvents(new SaberGUIListener(), this);
         getServer().getPluginManager().registerEvents(factionsPlayerListener = new FactionsPlayerListener(), this);
 
-        if (Conf.userSpawnerChunkSystem) {
+        if (Config.SPAWNERCHUNKS_ENABLED.getOption()) {
             this.getServer().getPluginManager().registerEvents(new SpawnerChunkListener(), this);
         }
 
         // Register Event Handlers
-        eventsListener = new Listener[]{
+        Listener[] eventsListener = new Listener[]{
                 new FactionsChatListener(),
                 new FactionsEntityListener(),
                 new FactionsExploitListener(),
@@ -183,11 +182,11 @@ public class FactionsPlugin extends MPlugin {
         for (Listener eventListener : eventsListener)
             getServer().getPluginManager().registerEvents(eventListener, this);
 
-        if (Conf.useGraceSystem) {
+        if (Config.FACTION_GRACE_ENABLED.getOption()) {
             getServer().getPluginManager().registerEvents(timerManager.graceTimer, this);
         }
 
-        this.asyncPlayerMap = new AsyncPlayerMap(this);
+        new FactionsTask(this);
 
         this.getCommand(refCommand).setExecutor(cmdBase);
 
@@ -293,9 +292,9 @@ public class FactionsPlugin extends MPlugin {
             this.getServer().getScheduler().cancelTask(AutoLeaveTask);
         }
 
-        if (Conf.useAutoLeaveAndDisbandSystem) {
-            if (Conf.autoLeaveRoutineRunsEveryXMinutes > 0.0) {
-                long ticks = (long) (20 * 60 * Conf.autoLeaveRoutineRunsEveryXMinutes);
+        if (Config.AUTOPURGE_ENALBED.getOption()) {
+            if (Config.AUTOPURGE_INTERVAL_MINUTES.getInt() > 0.0) {
+                long ticks = 20L * 60 * Config.AUTOPURGE_INTERVAL_MINUTES.getInt();
                 AutoLeaveTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoLeaveTask(), ticks, ticks);
             }
         }
@@ -303,7 +302,6 @@ public class FactionsPlugin extends MPlugin {
 
     @Override
     public void postAutoSave() {
-        //Board.getInstance().forceSave(); Not sure why this was there as it's called after the board is already saved.
         Conf.save();
     }
 
@@ -316,7 +314,7 @@ public class FactionsPlugin extends MPlugin {
 
     @Override
     public boolean logPlayerCommands() {
-        return Conf.logPlayerCommands;
+        return Config.LOG_COMMANDS.getOption();
     }
 
     @Override
@@ -376,17 +374,13 @@ public class FactionsPlugin extends MPlugin {
         }
     }
 
-    public AsyncPlayerMap getAsyncPlayerMap() {
-        return asyncPlayerMap;
-    }
-
     // -------------------------------------------- //
     // Functions for other plugins to hook into
     // -------------------------------------------- //
 
     // If another plugin is handling insertion of chat tags, this should be used to notify Factions
     public void handleFactionTagExternally(boolean notByFactions) {
-        Conf.chatTagHandledByAnotherPlugin = notByFactions;
+        Config.CHAT_TAG_OTHERPLUGIN.setOption(notByFactions);
     }
 
     public FLogManager getFlogManager() {

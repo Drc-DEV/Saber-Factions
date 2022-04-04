@@ -4,6 +4,7 @@ import com.massivecraft.factions.*;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.WarmUpUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.Bukkit;
@@ -385,7 +386,7 @@ public class CommandContext {
             return true;
         }
 
-        if (Conf.bankEnabled && Conf.bankFactionPaysCosts && fPlayer.hasFaction()) {
+        if (Config.ECON_BANK_ENABLED.getOption() && Config.ECON_BANK_PAYS_COSTS.getOption() && fPlayer.hasFaction()) {
             return Econ.modifyMoney(faction, -cost, toDoThis, forDoingThis);
         } else {
             return Econ.modifyMoney(fPlayer, -cost, toDoThis, forDoingThis);
@@ -402,7 +403,7 @@ public class CommandContext {
             return true;
         }
 
-        if (Conf.bankEnabled && Conf.bankFactionPaysCosts && fPlayer.hasFaction()) {
+        if (Config.ECON_BANK_ENABLED.getOption() && Config.ECON_BANK_PAYS_COSTS.getOption() && fPlayer.hasFaction()) {
             return Econ.hasAtLeast(faction, cost, toDoThis);
         } else {
             return Econ.hasAtLeast(fPlayer, cost, toDoThis);

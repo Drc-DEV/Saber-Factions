@@ -1,7 +1,6 @@
 package com.massivecraft.factions.cmd.claim;
 
 import com.massivecraft.factions.Board;
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.Aliases;
@@ -15,6 +14,7 @@ import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.ChunkReference;
 import com.massivecraft.factions.util.Logger;
 import com.massivecraft.factions.util.SpiralTask;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -60,7 +60,7 @@ public class CmdUnclaim extends FCommand {
             }
 
             new SpiralTask(new FLocation(context.player), radius) {
-                private final int limit = Conf.radiusClaimFailureLimit - 1;
+                private final int limit = Config.FACTION_CLAIMRADIUS_TRIES.getInt() - 1;
                 private int failCount = 0;
 
                 @Override
@@ -92,7 +92,7 @@ public class CmdUnclaim extends FCommand {
                 Board.getInstance().removeAt(target);
                 context.msg(TL.COMMAND_UNCLAIM_SAFEZONE_SUCCESS);
 
-                if (Conf.logLandUnclaims) {
+                if (Config.LOG_FUNCLAIM.getOption()) {
                     Logger.print(TL.COMMAND_UNCLAIM_LOG.format(context.fPlayer.getName(), target.getCoordString(), targetFaction.getTag()), Logger.PrefixType.DEFAULT);
                 }
                 return true;
@@ -105,7 +105,7 @@ public class CmdUnclaim extends FCommand {
                 Board.getInstance().removeAt(target);
                 context.msg(TL.COMMAND_UNCLAIM_WARZONE_SUCCESS);
 
-                if (Conf.logLandUnclaims) {
+                if (Config.LOG_FUNCLAIM.getOption()) {
                     Logger.print(TL.COMMAND_UNCLAIM_LOG.format(context.fPlayer.getName(), target.getCoordString(), targetFaction.getTag()), Logger.PrefixType.DEFAULT);
                 }
                 return true;
@@ -127,7 +127,7 @@ public class CmdUnclaim extends FCommand {
             targetFaction.msg(TL.COMMAND_UNCLAIM_UNCLAIMED, context.fPlayer.describeTo(targetFaction, true));
             context.msg(TL.COMMAND_UNCLAIM_UNCLAIMS);
 
-            if (Conf.logLandUnclaims) {
+            if (Config.LOG_FUNCLAIM.getOption()) {
                 Logger.print(TL.COMMAND_UNCLAIM_LOG.format(context.fPlayer.getName(), target.getCoordString(), targetFaction.getTag()), Logger.PrefixType.DEFAULT);
             }
 
@@ -148,9 +148,9 @@ public class CmdUnclaim extends FCommand {
             return false;
         }
 
-        if (Conf.userSpawnerChunkSystem) {
+        if (Config.SPAWNERCHUNKS_ENABLED.getOption()) {
             if (faction.getSpawnerChunks().contains(target) && faction.getSpawnerChunks() != null) {
-                if (Conf.allowUnclaimSpawnerChunksWithSpawnersInChunk) {
+                if (Config.SPAWNERCHUNKS_ALLOW_UNCLAIM.getOption()) {
                     context.faction.getSpawnerChunks().remove(target);
                     context.fPlayer.msg(TL.SPAWNER_CHUNK_UNCLAIMED);
                 } else {
@@ -171,7 +171,7 @@ public class CmdUnclaim extends FCommand {
         if (Econ.shouldBeUsed()) {
             double refund = Econ.calculateClaimRefund(context.faction.getLandRounded());
 
-            if (Conf.bankEnabled && Conf.bankFactionPaysLandCosts) {
+            if (Config.ECON_BANK_ENABLED.getOption() && Config.ECON_BANK_PAYS_CLAIM_COSTS.getOption()) {
                 if (!Econ.modifyMoney(context.faction, refund, TL.COMMAND_UNCLAIM_TOUNCLAIM.toString(), TL.COMMAND_UNCLAIM_FORUNCLAIM.toString())) {
                     return false;
                 }
@@ -186,7 +186,7 @@ public class CmdUnclaim extends FCommand {
 
         context.faction.msg(TL.COMMAND_UNCLAIM_FACTIONUNCLAIMED, context.fPlayer.describeTo(context.faction, true));
 
-        if (Conf.logLandUnclaims) {
+        if (Config.LOG_FUNCLAIM.getOption()) {
             Logger.print(TL.COMMAND_UNCLAIM_LOG.format(context.fPlayer.getName(), target.getCoordString(), targetFaction.getTag()), Logger.PrefixType.DEFAULT);
         }
 

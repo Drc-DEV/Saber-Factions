@@ -1,12 +1,13 @@
 package com.massivecraft.factions.tag;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
+import org.bukkit.ChatColor;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -42,7 +43,7 @@ public enum FactionTag implements Tag {
             boolean raidable = fac.getLandRounded() >= fac.getPowerRounded();
             String str = raidable ? TL.RAIDABLE_TRUE.toString() : TL.RAIDABLE_FALSE.toString();
             if (FactionsPlugin.getInstance().getConfig().getBoolean("hcf.dtr", false)) {
-                int dtr = raidable ? 0 : (int) Math.ceil(((double) (fac.getPowerRounded() - fac.getLandRounded())) / Conf.powerPerDeath);
+                int dtr = raidable ? 0 : (int) Math.ceil(((double) (fac.getPowerRounded() - fac.getLandRounded())) / Config.POWER_PER_DEATH.getDouble());
                 str += ' ' + TL.COMMAND_SHOW_DEATHS_TIL_RAIDABLE.format(dtr);
             }
             return str;
@@ -53,7 +54,7 @@ public enum FactionTag implements Tag {
     ANNOUNCEMENT("{announcement}", (fac) -> {
         return String.valueOf(fac.getAnnouncements());
     }),
-    PEACEFUL("{peaceful}", (fac) -> fac.isPeaceful() ? Conf.colorNeutral + TL.COMMAND_SHOW_PEACEFUL.toString() : ""),
+    PEACEFUL("{peaceful}", (fac) -> fac.isPeaceful() ? ChatColor.valueOf(Config.COLOR_NEUTRAL.getString()) + TL.COMMAND_SHOW_PEACEFUL.toString() : ""),
     PERMANENT("permanent", (fac) -> fac.isPermanent() ? "permanent" : "{notPermanent}"), // no braces needed
     LAND_VALUE("{land-value}", (fac) -> Econ.shouldBeUsed() ? Econ.moneyString(Econ.calculateTotalLandValue(fac.getLandRounded())) : Tag.isMinimalShow() ? null : TL.ECON_OFF.format("value")),
     DESCRIPTION("{description}", Faction::getDescription),
@@ -61,7 +62,7 @@ public enum FactionTag implements Tag {
     LAND_REFUND("{land-refund}", (fac) -> Econ.shouldBeUsed() ? Econ.moneyString(Econ.calculateTotalLandRefund(fac.getLandRounded())) : Tag.isMinimalShow() ? null : TL.ECON_OFF.format("refund")),
     BANK_BALANCE("{faction-balance}", (fac) -> {
         if (Econ.shouldBeUsed()) {
-            return Conf.bankEnabled ? Econ.insertCommas(Econ.getFactionBalance(fac)) : Tag.isMinimalShow() ? null : TL.ECON_OFF.format("balance");
+            return Config.ECON_BANK_ENABLED.getOption() ? Econ.insertCommas(Econ.getFactionBalance(fac)) : Tag.isMinimalShow() ? null : TL.ECON_OFF.format("balance");
         }
         return Tag.isMinimalShow() ? null : TL.ECON_OFF.format("balance");
     }),

@@ -3,6 +3,7 @@ package com.massivecraft.factions.listeners;
 import com.cryptomorin.xseries.XMaterial;
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.util.FastChunk;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -24,7 +25,7 @@ public class SpawnerChunkListener implements Listener {
                 return;
             }
 
-            if (!Conf.allowSpawnersPlacedInWilderness) {
+            if (!Config.SPAWNERCHUNKS_ALLOW_WILDERNESS.getOption()) {
                 if (fac.isNormal()) {
                     if (!fac.getSpawnerChunks().contains(fastChunk)) {
                         e.setCancelled(true);

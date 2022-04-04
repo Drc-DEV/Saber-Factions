@@ -1,9 +1,9 @@
 package com.massivecraft.factions.cmd;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.struct.ChatMode;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -30,7 +30,7 @@ public class CmdChat extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!Conf.factionOnlyChat) {
+        if (!Config.CHAT_FACTION_ONLY.getOption()) {
             context.msg(TL.COMMAND_CHAT_DISABLED.toString());
             return;
         }

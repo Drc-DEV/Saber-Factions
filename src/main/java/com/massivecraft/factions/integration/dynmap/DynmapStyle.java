@@ -1,6 +1,6 @@
 package com.massivecraft.factions.integration.dynmap;
 
-import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.zcore.config.Config;
 
 public class DynmapStyle {
 
@@ -17,9 +17,6 @@ public class DynmapStyle {
     public Integer lineWeight = null;
     public String fillColor = null;
     public Double fillOpacity = null;
-    // NOTE: We just return the string here. We do not return the resolved Dynmap MarkerIcon object.
-    // The reason is we use this class in the MConf. For serialization to work Dynmap would have to be loaded and we can't require that.
-    // Using dynmap is optional.
     public String homeMarker = null;
     public Boolean boost = null;
 
@@ -43,7 +40,7 @@ public class DynmapStyle {
     }
 
     public int getLineColor() {
-        return getColor(coalesce(this.lineColor, Conf.dynmapDefaultStyle.lineColor, Conf.DYNMAP_STYLE_LINE_COLOR));
+        return getColor(coalesce(this.lineColor, getDefault().lineColor, Config.DYNMAP_STYLE_LINE_COLOR.getString()));
     }
 
     public DynmapStyle setStrokeColor(String strokeColor) {
@@ -52,7 +49,7 @@ public class DynmapStyle {
     }
 
     public double getLineOpacity() {
-        return coalesce(this.lineOpacity, Conf.dynmapDefaultStyle.lineOpacity, Conf.DYNMAP_STYLE_LINE_OPACITY);
+        return coalesce(this.lineOpacity, getDefault().lineOpacity, Config.DYNMAP_STYLE_LINE_OPACITY.getDouble());
     }
 
     public DynmapStyle setLineOpacity(Double strokeOpacity) {
@@ -61,7 +58,7 @@ public class DynmapStyle {
     }
 
     public int getLineWeight() {
-        return coalesce(this.lineWeight, Conf.dynmapDefaultStyle.lineWeight, Conf.DYNMAP_STYLE_LINE_WEIGHT);
+        return coalesce(this.lineWeight, getDefault().lineWeight, Config.DYNMAP_STYLE_LINE_WEIGHT.getInt());
     }
 
     public DynmapStyle setLineWeight(Integer strokeWeight) {
@@ -70,7 +67,7 @@ public class DynmapStyle {
     }
 
     public int getFillColor() {
-        return getColor(coalesce(this.fillColor, Conf.dynmapDefaultStyle.fillColor, Conf.DYNMAP_STYLE_FILL_COLOR));
+        return getColor(coalesce(this.fillColor, getDefault().fillColor, Config.DYNMAP_STYLE_FILL_COLOR.getString()));
     }
 
     public DynmapStyle setFillColor(String fillColor) {
@@ -79,7 +76,7 @@ public class DynmapStyle {
     }
 
     public double getFillOpacity() {
-        return coalesce(this.fillOpacity, Conf.dynmapDefaultStyle.fillOpacity, Conf.DYNMAP_STYLE_FILL_OPACITY);
+        return coalesce(this.fillOpacity, getDefault().fillOpacity, Config.DYNMAP_STYLE_FILL_OPACITY.getDouble());
     }
 
     public DynmapStyle setFillOpacity(Double fillOpacity) {
@@ -88,7 +85,7 @@ public class DynmapStyle {
     }
 
     public String getHomeMarker() {
-        return coalesce(this.homeMarker, Conf.dynmapDefaultStyle.homeMarker, Conf.DYNMAP_STYLE_HOME_MARKER);
+        return coalesce(this.homeMarker, getDefault().homeMarker, Config.DYNMAP_STYLE_HOME_MARKER.getString());
     }
 
     public DynmapStyle setHomeMarker(String homeMarker) {
@@ -101,12 +98,23 @@ public class DynmapStyle {
     // -------------------------------------------- //
 
     public boolean getBoost() {
-        return coalesce(this.boost, Conf.dynmapDefaultStyle.boost, Conf.DYNMAP_STYLE_BOOST);
+        return coalesce(this.boost, getDefault().boost, Config.DYNMAP_STYLE_BOOST.getOption());
     }
 
     public DynmapStyle setBoost(Boolean boost) {
         this.boost = boost;
         return this;
+    }
+
+    public DynmapStyle getDefault() {
+        return new DynmapStyle()
+                .setStrokeColor(Config.DYNMAP_STYLE_LINE_COLOR.getString())
+                .setLineOpacity(Config.DYNMAP_STYLE_LINE_OPACITY.getDouble())
+                .setLineWeight(Config.DYNMAP_STYLE_LINE_WEIGHT.getInt())
+                .setFillColor(Config.DYNMAP_STYLE_FILL_COLOR.getString())
+                .setFillOpacity(Config.DYNMAP_STYLE_FILL_OPACITY.getDouble())
+                .setHomeMarker(Config.DYNMAP_STYLE_HOME_MARKER.getString())
+                .setBoost(Config.DYNMAP_STYLE_BOOST.getOption());
     }
 
 }

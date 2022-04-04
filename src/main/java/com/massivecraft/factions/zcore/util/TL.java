@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2019 Driftay
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.massivecraft.factions.zcore.util;
 
 import org.bukkit.ChatColor;
@@ -57,9 +41,9 @@ public enum TL {
     ACTIONS_NOSAMEROLE("{role} can't control each other..."),
     ACTIONS_NOFACTION("You are not member of any faction."),
 
-    ACTION_DENIED_SAFEZONE("You can't use %1$s in safezone!"),
-    ACTION_DENIED_WARZONE("You can't use %1$s in warzone!"),
-    ACTION_DENIED_WILDERNESS("You can't use %1$s in wilderness!"),
+    ACTION_DENIED_SAFEZONE("You can't use %1$s in SafeZone!"),
+    ACTION_DENIED_WARZONE("You can't use %1$s in WarZone!"),
+    ACTION_DENIED_WILDERNESS("You can't use %1$s in Wilderness!"),
     ACTION_DENIED_OTHER("%1$s does not allow you to %2$s here!"),
 
     /**
@@ -380,31 +364,6 @@ public enum TL {
     COMMAND_DEBUG_DESCRIPTION("Print debugging info to console"),
     COMMAND_DEBUG_PRINTED("&c&l[!]&7 Debug info has been printed to console"),
 
-    //DISCORD
-    COMMAND_INVITE_BOT("&c&l[!] Click Here To Invite The Discord Bot To Your Factions Discord"),
-    WEEWOO_ALREADY_STARTED_DISCORD("Weewoo already started"),
-    WEEWOO_ALREADY_STARTED_INGAME("&cWeewoo already started"),
-    WEEWOO_STARTED_DISCORD("Weewoo started by %1$s"),
-    WEEWOO_ALREADY_STOPPED_DISCORD("Weewoo already stopped"),
-    WEEWOO_STOPPED_DISCORD("Weewoo stopped by %1$s"),
-    INVITE_BOT_USAGE("Gets the invite for the Discord bot"),
-    SET_GUILD_ID_USAGE("Sets the guild id for the faction"),
-    SET_GUILD_ID_SUCCESS("&aSuccesfully set guild id"),
-    SET_GUILD_ID_INVALID_ID("&cInvalid guild id (is the bot in the guild?)"),
-    SET_GUILD_ID_UNABLE_TO_MESSAGE_GUILD_OWNER("&cUnable to message guild owner"),
-    SET_GUILD_ID_TIMED_OUT_MINECRAFT("&cTimed out"),
-    SET_GUILD_ID_TIMED_OUT_DISCORD("Timed out"),
-    SET_GUILD_ID_GUILD_ALREADY_LINKED("&cThat guild is already linked to a faction"),
-    SET_GUILD_ID_RESET_ID("&c&l[!] &7You have reset your guild id!"),
-    SET_GUILD_ID_PMING_OWNER("&aNow Direct messaging the Discord server owner to approve the link, times out in 15 seconds."),
-    CANT_FORCE_SET_GUILD_ID("&cYou cannot forcefully set guild ids for other guilds."),
-    DISCORD_LINK_REQUIRED("&c&l[!] You cannot do this while your Discord is not linked! Link your account by using /f discord link"),
-    DISCORD_LINK_SUCCESS("Your account has been linked!"),
-    DISCORD_CODE_SENT("&c&l[!]&7 Your code is &f%1$s &7please send this to the SaberFactions bot on Discord"),
-    DISCORD_ALREADY_LINKED("&c&l[!]&7 Your account is already linked to &f%1$s"),
-    DISCORD_CODE_INVALID_KEY("That code is invalid, verify the code is correct."),
-    DISCORD_CODE_INVALID_FORMAT("If you are submitting a code please only type the code. Example message: 0000"),
-
     GOD_APPLE_COOLDOWN("&c&l[!] &cYou may eat another god apple again in &b{seconds} seconds&c!"),
     ENDER_PEARL_COOLDOWN("&c&l[!] &cYou may enderpearl again in &b{seconds} seconds&c!"),
     VEHICLE_TELEPORT_BLOCK("&c&l[!] You cannot teleport while you are inside a vehicle"),
@@ -503,16 +462,6 @@ public enum TL {
     COMMAND_HOME_BLOCKED("&c&l[!] You may not teleport to a home that is claimed by &b%1$s"),
 
     COMMAND_INVENTORYSEE_DESCRIPTION("View a faction members inventory"),
-
-    COMMAND_INSPECT_DISABLED_MSG("&c&l[!]&7 Inspect mode is now &cdisabled."),
-    COMMAND_INSPECT_DISABLED_NOFAC("&c&l[!]&7 Inspect mode is now &cdisabled,&7 because you &cdo not have a faction!"),
-    COMMAND_INSPECT_ENABLED("&c&l[!]&7 Inspect mode is now &aEnabled."),
-    COMMAND_INSPECT_HEADER("&c&m---&7Inspect Data&c&m---&c//&7x:{x},y:{y},z:{z}"),
-    COMMAND_INSPECT_ROW("&c{time} &7// &c{action} &7// &c{player} &7// &c{block-type}"),
-    COMMAND_INSPECT_NODATA("&c&l[!]&7 &7No Data was found!"),
-    COMMAND_INSPECT_NOTINCLAIM("&c&l[!]&7 &7You can &conly&7 inspect in &cyour &7claims!"),
-    COMMAND_INSPECT_BYPASS("&c&l[!]&7 Inspecting in &cbypass&7 mode"),
-    COMMAND_INSPECT_DESCRIPTION("Inspect blocks!"),
 
     COMMAND_INVITE_TOINVITE("to invite someone"),
     COMMAND_INVITE_FORINVITE("for inviting someone"),
@@ -1057,7 +1006,7 @@ public enum TL {
     COMMAND_UNCLAIMALL_DESCRIPTION("Unclaim all of your factions land"),
     COMMAND_UNCLAIM_CLICKTOUNCLAIM("Click to unclaim &2(%1$d, %2$d)"),
 
-    COMMAND_VERSION_NAME("&c&l[!]&7 &c&k||| &r&4SaberFactions&7 &c&k|||&r &c» &7By Driftay"),
+    COMMAND_VERSION_NAME("&c&l[!]&7 &c&k||| &r&4Factions&7 &c&k|||&r &c»"),
     COMMAND_VERSION_VERSION("&7Version &c» &7%1$s"),
     COMMAND_VERSION_DESCRIPTION("Show plugin and translation version information"),
 

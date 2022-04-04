@@ -1,6 +1,7 @@
 package com.massivecraft.factions.util;
 
 import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.zcore.config.Config;
 
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -56,7 +57,7 @@ public class TimeUtil {
 
     private static Calendar getCalenderTimeZone() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone(Conf.serverTimeZone));
+        calendar.setTimeZone(TimeZone.getTimeZone(Config.SERVER_TIMEZONE.getString()));
         return calendar;
     }
 

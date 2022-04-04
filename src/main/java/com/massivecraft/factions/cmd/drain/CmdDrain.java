@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.drain;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.FactionsPlugin;
@@ -13,6 +12,7 @@ import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.Cooldown;
 import com.massivecraft.factions.util.TimeUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
 
@@ -36,11 +36,11 @@ public class CmdDrain extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!Conf.factionsDrainEnabled) {
+        if (!Config.FACTION_DRAIN_ENABLED.getOption()) {
             context.fPlayer.msg(TL.GENERIC_DISABLED, "Factions Drain");
             return;
         }
-        if(Cooldown.isOnCooldown(context.player, "drainCooldown")) {
+        if (Cooldown.isOnCooldown(context.player, "drainCooldown")) {
             long remaining = context.player.getMetadata("drainCooldown").get(0).asLong() - System.currentTimeMillis();
             int remainSec = (int) (remaining / 1000L);
             context.msg(CC.translate(TL.COMMAND_DRAIN_COOLDOWN.toString().replace("{seconds}", TimeUtil.formatSeconds(remainSec))));
@@ -86,14 +86,14 @@ public class CmdDrain extends FCommand {
             }
         }
 
-        if(useRoleDrain) {
+        if (useRoleDrain) {
             context.msg(TL.COMMAND_DRAIN_ROLE_DRAINED_AMOUNT, roleToDrain, calculatedAmount);
         } else {
             context.msg(TL.COMMAND_DRAIN_RECIEVED_AMOUNT, calculatedAmount);
         }
 
         FactionsPlugin.getInstance().getEcon().depositPlayer(context.player, calculatedAmount);
-        Cooldown.setCooldown(context.faction, "drainCooldown", Conf.factionDrainCooldown);
+        Cooldown.setCooldown(context.faction, "drainCooldown", Config.FACTION_DRAIN_COOLDOWN.getInt());
     }
 
     @Override

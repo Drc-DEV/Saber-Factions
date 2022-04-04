@@ -108,6 +108,17 @@ public class TagUtil {
         return line;
     }
 
+    public static String parsePlaceholders(String string, Faction faction, Player player) {
+        string = parsePlaceholders(player, string);
+        string = string.replace("{Faction}", faction.getTag()).replace("{faction}", faction.getTag())
+                .replace("{online}", faction.getOnlinePlayers().size() + "")
+                .replace("{offline}", faction.getFPlayers().size() - faction.getOnlinePlayers().size() + "")
+                .replace("{chunks}", faction.getAllClaims().size() + "")
+                .replace("{power}", faction.getPower() + "")
+                .replace("{leader}", faction.getFPlayerAdmin() + "");
+        return string;
+    }
+
     /**
      * Checks if a line has fancy variables
      *

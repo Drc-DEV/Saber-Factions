@@ -24,7 +24,6 @@ public class CmdDebug extends FCommand {
         Logger.print("Players Online: " + Bukkit.getOnlinePlayers().size(), Logger.PrefixType.DEBUG);
         Logger.print("------Command------", Logger.PrefixType.DEBUG);
         Logger.print("Discord Commands: " + FCmdRoot.instance.discordEnabled, Logger.PrefixType.DEBUG);
-        Logger.print("Check/WeeWoo Commands: " + FCmdRoot.instance.checkEnabled, Logger.PrefixType.DEBUG);
         Logger.print("Mission Command: " + FCmdRoot.instance.missionsEnabled, Logger.PrefixType.DEBUG);
         Logger.print("Shop Command: " + FCmdRoot.instance.fShopEnabled, Logger.PrefixType.DEBUG);
         Logger.print("Inventory See Command: " + FCmdRoot.instance.invSeeEnabled, Logger.PrefixType.DEBUG);
@@ -34,7 +33,6 @@ public class CmdDebug extends FCommand {
         Logger.print("Focus Command: " + FCmdRoot.instance.fFocusEnabled, Logger.PrefixType.DEBUG);
         Logger.print("Fly Command: " + FCmdRoot.instance.fFlyEnabled, Logger.PrefixType.DEBUG);
         Logger.print("PayPal Commands: " + FCmdRoot.instance.fPayPalEnabled, Logger.PrefixType.DEBUG);
-        Logger.print("Inspect Command: " + FCmdRoot.instance.coreProtectEnabled, Logger.PrefixType.DEBUG);
         Logger.print("Internal FTOP Command: " + FCmdRoot.instance.internalFTOPEnabled, Logger.PrefixType.DEBUG);
         Logger.print("----End Command----", Logger.PrefixType.DEBUG);
         Logger.print("-----End Main-----", Logger.PrefixType.DEBUG);

@@ -1,11 +1,15 @@
 package com.massivecraft.factions.integration;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.iface.EconomyParticipator;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.Logger;
 import com.massivecraft.factions.util.RelationUtil;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -31,7 +35,7 @@ public class Econ {
     public static void setup() {
         if (isSetup()) return;
 
-        String integrationFail = "Economy integration is " + (Conf.econEnabled ? "enabled, but" : "disabled, and") + " the plugin \"Vault\" ";
+        String integrationFail = "Economy integration is " + (Config.ECON_ENABLED.getOption() ? "enabled, but" : "disabled, and") + " the plugin \"Vault\" ";
 
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
             Logger.print(integrationFail + "is not installed.", Logger.PrefixType.WARNING);
@@ -44,14 +48,14 @@ public class Econ {
         }
         econ = rsp.getProvider();
         Logger.print("Economy integration through Vault plugin successful.", Logger.PrefixType.DEFAULT);
-        if (!Conf.econEnabled)
+        if (!Config.ECON_ENABLED.getOption())
             Logger.print("NOTE: Economy is disabled. You can enable it with the command: f config econEnabled true", Logger.PrefixType.DEFAULT);
         //FactionsPlugin.getInstance().cmdBase.cmdHelp.updateHelp();
         Bukkit.getScheduler().scheduleSyncDelayedTask(FactionsPlugin.getInstance(), Econ::oldMoneyDoTransfer, 20L);
     }
 
     public static boolean shouldBeUsed() {
-        return Conf.econEnabled && econ != null && econ.isEnabled();
+        return Config.ECON_ENABLED.getOption() && econ != null && econ.isEnabled();
     }
 
     public static boolean isSetup() {
@@ -59,11 +63,9 @@ public class Econ {
     }
 
     public static void modifyUniverseMoney(double delta) {
-        if (!shouldBeUsed()) return;
-        if (Conf.econUniverseAccount == null) return;
-        if (Conf.econUniverseAccount.length() == 0) return;
-        if (!econ.hasAccount(Conf.econUniverseAccount)) return;
-        modifyBalance(Conf.econUniverseAccount, delta);
+        if (!shouldBeUsed() || Config.ECON_ACCOUNT.getString() == null || Config.ECON_ACCOUNT.getString().length() == 0 || !econ.hasAccount(Config.ECON_ACCOUNT.getString()))
+            return;
+        modifyBalance(Config.ECON_ACCOUNT.getString(), delta);
     }
 
     public static void oldMoneyDoTransfer() {
@@ -92,7 +94,7 @@ public class Econ {
 
     public static void sendBalanceInfo(FPlayer to, EconomyParticipator about) {
         if (!shouldBeUsed()) {
-            Logger.print( "Vault does not appear to be hooked into an economy plugin.", Logger.PrefixType.WARNING);
+            Logger.print("Vault does not appear to be hooked into an economy plugin.", Logger.PrefixType.WARNING);
             return;
         }
         to.msg(TL.ECON_PLAYERBALANCE, about.describeTo(to, true), Econ.moneyString(econ.getBalance(about.getAccountId())));
@@ -100,7 +102,7 @@ public class Econ {
 
     public static void sendBalanceInfo(FPlayer to, Faction about) {
         if (!shouldBeUsed()) {
-            Logger.print( "Vault does not appear to be hooked into an economy plugin.", Logger.PrefixType.WARNING);
+            Logger.print("Vault does not appear to be hooked into an economy plugin.", Logger.PrefixType.WARNING);
             return;
         }
 
@@ -134,7 +136,7 @@ public class Econ {
         // Ohh by the way... Yes it could. For daily rent to the faction.
         if (i == fI && fI == fYou) return true;
         // Factions can be controlled by members that are moderators... or any member if any member can withdraw.
-        if (you instanceof Faction && fI == fYou && (Conf.bankMembersCanWithdraw || (i instanceof FPlayer && ((FPlayer) i).getRole().value >= Role.MODERATOR.value)))
+        if (you instanceof Faction && fI == fYou && (Config.ECON_BANK_MEMBERS_WITHDRAW.getOption() || (i instanceof FPlayer && ((FPlayer) i).getRole().value >= Role.MODERATOR.value)))
             return true;
         // Otherwise you may not!;,,;
         i.msg(TL.ECON_CANTCONTROLMONEY, i.describeTo(i, true), you.describeTo(i));
@@ -361,12 +363,12 @@ public class Econ {
     public static double calculateClaimCost(int ownedLand, boolean takingFromAnotherFaction) {
         if (!shouldBeUsed()) return 0d;
         // basic claim cost, plus land inflation cost, minus the potential bonus given for claiming from another faction
-        return Conf.econCostClaimWilderness + (Conf.econCostClaimWilderness * Conf.econClaimAdditionalMultiplier * ownedLand) - (takingFromAnotherFaction ? Conf.econCostClaimFromFactionBonus : 0.0);
+        return Config.ECON_COST_CLAIM.getDouble() + (Config.ECON_COST_CLAIM.getDouble() * Config.ECON_CLAIM_ADDITIONAL_MULTIPLIER.getDouble() * ownedLand) - (takingFromAnotherFaction ? Config.ECON_COST_OVERCLAIM_BONUS.getDouble() : 0.0);
     }
 
     // calculate refund amount for unclaiming land
     public static double calculateClaimRefund(int ownedLand) {
-        return calculateClaimCost(ownedLand - 1, false) * Conf.econClaimRefundMultiplier;
+        return calculateClaimCost(ownedLand - 1, false) * Config.ECON_CLAIM_REFUND_MULTIPLIER.getDouble();
     }
 
     // calculate value of all owned land
@@ -383,7 +385,7 @@ public class Econ {
 
     // calculate refund amount for all owned land
     public static double calculateTotalLandRefund(int ownedLand) {
-        return calculateTotalLandValue(ownedLand) * Conf.econClaimRefundMultiplier;
+        return calculateTotalLandValue(ownedLand) * Config.ECON_CLAIM_REFUND_MULTIPLIER.getDouble();
     }
 
     public static boolean hasAccount(String name) {

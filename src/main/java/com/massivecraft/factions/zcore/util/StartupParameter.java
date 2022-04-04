@@ -1,22 +1,18 @@
 package com.massivecraft.factions.zcore.util;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.cmd.audit.FLogManager;
-import com.massivecraft.factions.cmd.check.CheckTask;
-import com.massivecraft.factions.cmd.check.WeeWooTask;
 import com.massivecraft.factions.cmd.reserve.ListParameterizedType;
 import com.massivecraft.factions.cmd.reserve.ReserveObject;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.integration.dynmap.EngineDynmap;
 import com.massivecraft.factions.util.Logger;
-import com.massivecraft.factions.util.Metrics;
 import com.massivecraft.factions.util.timer.TimerManager;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.file.impl.FileManager;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 import pw.saber.corex.CoreX;
 
@@ -25,15 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import static com.massivecraft.factions.Conf.safeZoneNerfedCreatureTypes;
-import static com.massivecraft.factions.Conf.territoryDenyUsageMaterials;
-
 public class StartupParameter {
 
     public static void initData(FactionsPlugin plugin) {
-
-        int pluginId = 7013;
-        new Metrics(FactionsPlugin.getInstance(), pluginId);
 
         FactionsPlugin.getInstance().fileManager = new FileManager();
         FactionsPlugin.getInstance().fileManager.setupFiles();
@@ -62,7 +52,7 @@ public class StartupParameter {
         Aliases.load();
         EngineDynmap.getInstance().init();
 
-        if(Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) {
+        if (Bukkit.getPluginManager().isPluginEnabled("LunarClient-API")) {
             FactionsPlugin.getInstance().lunarClientAPI = LunarClientAPI.getInstance();
             Logger.print("Implementing Lunar Client Integration", Logger.PrefixType.DEFAULT);
         }
@@ -73,22 +63,9 @@ public class StartupParameter {
 
         initReserves();
 
-        FactionsPlugin.cachedRadiusClaim = Conf.useRadiusClaimSystem;
+        FactionsPlugin.cachedRadiusClaim = Config.FACTION_CLAIMRADIUS_ENABLED.getOption();
 
         CoreX.init();
-
-        if (Conf.useCheckSystem) {
-            int minute = 1200;
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new CheckTask(plugin, 3), 0L, minute * 3);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new CheckTask(plugin, 5), 0L, minute * 5);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new CheckTask(plugin, 10), 0L, minute * 10);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new CheckTask(plugin, 15), 0L, minute * 15);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new CheckTask(plugin, 30), 0L, minute * 30);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimer(plugin, CheckTask::cleanupTask, 0L, 1200L);
-            FactionsPlugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, new WeeWooTask(plugin), 600L, 600L);
-        }
-
-        populateConfSets();
 
         FactionsPlugin.getInstance().fLogManager.loadLogs(plugin);
 
@@ -97,46 +74,6 @@ public class StartupParameter {
         Logger.print("Loaded " + FactionsPlugin.getInstance().timerManager.getTimers().size() + " timers into list!", Logger.PrefixType.DEFAULT);
 
     }
-
-    public static void populateConfSets() {
-        try {
-            if (FactionsPlugin.getInstance().version >= 17) {
-                safeZoneNerfedCreatureTypes.add(EntityType.GLOW_SQUID);
-                safeZoneNerfedCreatureTypes.add(EntityType.AXOLOTL);
-                safeZoneNerfedCreatureTypes.add(EntityType.ZOMBIFIED_PIGLIN);
-            } else if (FactionsPlugin.getInstance().version == 16) {
-                safeZoneNerfedCreatureTypes.add(EntityType.ZOMBIFIED_PIGLIN);
-            } else {
-                safeZoneNerfedCreatureTypes.add(EntityType.valueOf("PIG_ZOMBIE"));
-            }
-
-            territoryDenyUsageMaterials.add(XMaterial.FIRE_CHARGE.parseMaterial());
-            territoryDenyUsageMaterials.add(XMaterial.FLINT_AND_STEEL.parseMaterial());
-            territoryDenyUsageMaterials.add(XMaterial.BUCKET.parseMaterial());
-            territoryDenyUsageMaterials.add(XMaterial.WATER_BUCKET.parseMaterial());
-            territoryDenyUsageMaterials.add(XMaterial.LAVA_BUCKET.parseMaterial());
-            if (FactionsPlugin.getInstance().version != 7) {
-                territoryDenyUsageMaterials.add(XMaterial.ARMOR_STAND.parseMaterial());
-            }
-
-            if (FactionsPlugin.getInstance().version >= 13) {
-                territoryDenyUsageMaterials.add(XMaterial.COD_BUCKET.parseMaterial());
-                territoryDenyUsageMaterials.add(XMaterial.PUFFERFISH_BUCKET.parseMaterial());
-                territoryDenyUsageMaterials.add(XMaterial.SALMON_BUCKET.parseMaterial());
-                territoryDenyUsageMaterials.add(XMaterial.TROPICAL_FISH_BUCKET.parseMaterial());
-            }
-
-            if (FactionsPlugin.getInstance().version >= 17) {
-                territoryDenyUsageMaterials.add(XMaterial.AXOLOTL_BUCKET.parseMaterial());
-                territoryDenyUsageMaterials.add(XMaterial.POWDER_SNOW_BUCKET.parseMaterial());
-            }
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }
-
-        Conf.save();
-    }
-
 
     public static void initReserves() {
         FactionsPlugin.getInstance().reserveObjects = new ArrayList<>();

@@ -1,9 +1,13 @@
 package com.massivecraft.factions.zcore.util;
 
-import com.massivecraft.factions.*;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.integration.Econ;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.util.timer.TimerManager;
+import com.massivecraft.factions.zcore.config.Config;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -140,8 +144,8 @@ public enum TagReplacer {
                 }
                 return TL.GENERIC_INFINITY.toString();
             case MAX_ALTS:
-                if (FactionsPlugin.getInstance().getConfig().getBoolean("f-alts.Enabled")) {
-                    return String.valueOf(Conf.factionAltMemberLimit);
+                if (Config.FACTION_ALT_ENABLED.getOption()) {
+                    return String.valueOf(Config.FACTION_ALT_LIMIT.getInt());
                 }
                 return TL.GENERIC_INFINITY.toString();
             case MAX_ENEMIES:
@@ -155,7 +159,7 @@ public enum TagReplacer {
                 }
                 return TL.GENERIC_INFINITY.toString();
             case MAX_WARPS:
-                return String.valueOf(FactionsPlugin.getInstance().getConfig().getInt("max-warps", 5));
+                return String.valueOf(Config.FACTION_WARPS_LIMIT.getInt());
             default:
         }
         return null;
@@ -210,7 +214,7 @@ public enum TagReplacer {
             case JOINING:
                 return (fac.getOpen() ? TL.COMMAND_SHOW_UNINVITED.toString() : TL.COMMAND_SHOW_INVITATION.toString());
             case PEACEFUL:
-                return fac.isPeaceful() ? Conf.colorNeutral + TL.COMMAND_SHOW_PEACEFUL.toString() : "";
+                return fac.isPeaceful() ? ChatColor.valueOf(Config.COLOR_NEUTRAL.getString()) + TL.COMMAND_SHOW_PEACEFUL.toString() : "";
             case PERMANENT:
                 return fac.isPermanent() ? "permanent" : "{notPermanent}";
             case CHUNKS:
@@ -250,7 +254,7 @@ public enum TagReplacer {
                 return Econ.shouldBeUsed() ? Econ.moneyString(Econ.calculateTotalLandRefund(fac.getLandRounded())) : minimal ? null : TL.ECON_OFF.format("refund");
             case BANK_BALANCE:
                 if (Econ.shouldBeUsed()) {
-                    return Conf.bankEnabled ? Econ.insertCommas(Econ.getFactionBalance(fac)) : minimal ? null : TL.ECON_OFF.format("balance");
+                    return Config.ECON_BANK_ENABLED.getOption() ? Econ.insertCommas(Econ.getFactionBalance(fac)) : minimal ? null : TL.ECON_OFF.format("balance");
                 }
                 return minimal ? null : TL.ECON_OFF.format("balance");
             case ALLIES_COUNT:
@@ -302,10 +306,7 @@ public enum TagReplacer {
      * @return if the raw line contains this enums variable
      */
     public boolean contains(String toSearch) {
-        if (tag == null) {
-            return false;
-        }
-        return toSearch.contains(tag);
+        return tag != null && toSearch.contains(tag);
     }
 
     /**

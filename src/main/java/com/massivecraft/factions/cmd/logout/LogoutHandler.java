@@ -1,7 +1,7 @@
 package com.massivecraft.factions.cmd.logout;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -44,7 +44,7 @@ public class LogoutHandler {
                 player.kickPlayer(String.valueOf(TL.COMMAND_LOGOUT_KICK_MESSAGE));
                 cancelLogout(player);
             }
-        }, Conf.logoutCooldown * 20L);
+        }, Config.F_LOGOUT_COOLDOWN.getInt() * 20L);
     }
 
     public String getName() {

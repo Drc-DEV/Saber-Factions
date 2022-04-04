@@ -1,6 +1,7 @@
 package com.massivecraft.factions.util.timer;
 
 import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.zcore.config.Config;
 import org.apache.commons.lang.time.FastDateFormat;
 
 import java.text.DecimalFormat;
@@ -14,7 +15,7 @@ import java.util.TimeZone;
  * Creation Date: 4/7/2020
  */
 public final class DateTimeFormats {
-    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone(Conf.serverTimeZone);
+    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone(Config.SERVER_TIMEZONE.getString());
     public static final ZoneId SERVER_ZONE_ID = SERVER_TIME_ZONE.toZoneId();
     public static final FastDateFormat DAY_MTH_HR_MIN_SECS = FastDateFormat.getInstance("dd/MM HH:mm:ss", SERVER_TIME_ZONE, Locale.ENGLISH);
     public static final FastDateFormat DAY_MTH_YR_HR_MIN_AMPM = FastDateFormat.getInstance("dd/MM/yy hh:mma", SERVER_TIME_ZONE, Locale.ENGLISH);

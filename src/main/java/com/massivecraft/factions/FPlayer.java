@@ -31,19 +31,11 @@ public interface FPlayer extends EconomyParticipator {
     boolean hasNotificationsEnabled();
 
     /**
-     * Determine if a player has enemies nearby based on the enemy check task in CmdFly
-     * NOTE: THIS VALUE IS ONLY UPDATED WHEN A USER IS USING FLY
+     * Determine if a player has enemies nearby
      *
      * @return enemiesNearby as a boolean
      */
     boolean hasEnemiesNearby();
-
-    /**
-     * Set if this FPlayer has an enemy nearby
-     *
-     * @param b enemiesNearby
-     */
-    void setEnemiesNearby(Boolean b);
 
     /**
      * Used to check if this player should be served titles
@@ -150,7 +142,11 @@ public interface FPlayer extends EconomyParticipator {
 
     boolean shouldTakeFallDamage();
 
-    void setTakeFallDamage(boolean fallDamage);
+    void setNoFallDamageSeconds(int seconds);
+
+    long getLastInCombat();
+
+    void setLastInCombat(long timestamp);
 
     double getPowerBoost();
 
@@ -257,12 +253,9 @@ public interface FPlayer extends EconomyParticipator {
 
     void setFriendlyFire(boolean status);
 
-    //inspect Stuff
+    // Titles
 
-    boolean isInspectMode();
-
-    void setInspectMode(boolean status);
-
+    void sendFactionChangeTitle(Faction faction);
 
     // Fly Checks
 
@@ -427,7 +420,7 @@ public interface FPlayer extends EconomyParticipator {
 
     String getEnteringWarp();
 
-    void checkIfNearbyEnemies();
+    boolean checkIfNearbyEnemies();
 
     int getCooldown(String cmd);
 

@@ -10,6 +10,7 @@ import com.massivecraft.factions.util.AsciiCompass;
 import com.massivecraft.factions.util.CC;
 import com.massivecraft.factions.util.FastChunk;
 import com.massivecraft.factions.util.Logger;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TagReplacer;
 import com.massivecraft.factions.zcore.util.TagUtil;
@@ -214,8 +215,7 @@ public abstract class MemoryBoard extends Board {
         ArrayList<FancyMessage> ret = new ArrayList<>();
         Faction factionLoc = getFactionAt(flocation);
         ret.add(new FancyMessage(ChatColor.DARK_GRAY + FactionsPlugin.getInstance().txt.titleize("(" + flocation.getCoordString() + ") " + factionLoc.getTag(fplayer))));
-        int buffer = FactionsPlugin.getInstance().getConfig().getInt("world-border.buffer", 0);
-
+        int buffer = Config.WORLDBORDER_BUFFER.getInt();
 
         // Get the compass
         List<String> asciiCompass = AsciiCompass.getAsciiCompass(inDegrees, ChatColor.DARK_GREEN, FactionsPlugin.getInstance().txt.parse("<gray>"));
@@ -223,15 +223,15 @@ public abstract class MemoryBoard extends Board {
         //Still use the player defined mapHeight, but if a server owner decides /f map command needs a nerf,
         //Use the smaller config value to allow for mapHeight updating without rewriting the entire players.json file
         int mapHeight = fplayer.getMapHeight();
-        if (mapHeight > Conf.mapHeight) mapHeight = Conf.mapHeight;
+        if (mapHeight > Config.MAP_HEIGHT.getInt()) mapHeight = Config.MAP_HEIGHT.getInt();
 
-        int halfWidth = Conf.mapWidth / 2;
+        int halfWidth = Config.MAP_WIDTH.getInt() / 2;
         int halfHeight = mapHeight / 2;
         FLocation topLeft = flocation.getRelative(-halfWidth, -halfHeight);
         int width = halfWidth * 2 + 1;
         int height = halfHeight * 2 + 1;
 
-        if (Conf.showMapFactionKey) {
+        if (Config.MAP_SHOW_FACTION_KEY.getOption()) {
             height--;
         }
 
@@ -257,34 +257,36 @@ public abstract class MemoryBoard extends Board {
                     if (flocationHere.isOutsideWorldBorder(buffer)) {
                         row.then("-").color(ChatColor.BLACK).tooltip(TL.CLAIM_MAP_OUTSIDEBORDER.toString());
                     } else if (factionHere.isWilderness()) {
-                        row.then("-").color(Conf.colorWilderness);
+                        row.then("-").color(ChatColor.valueOf(Config.COLOR_WILDERNESS.getString()));
                         // Lol someone didnt add the x and z making it claim the wrong position Can i copyright this xD
                         if (fplayer.getPlayer().hasPermission(Permission.CLAIMAT.node)) {
-                            if (Conf.enableClickToClaim) {
+                            if (Config.MAP_CLICK_TO_CLAIM.getOption()) {
                                 row.tooltip(TL.CLAIM_CLICK_TO_CLAIM.format(dx + topLeft.getX(), dz + topLeft.getZ()))
                                         .command(String.format("/f claimat %s %d %d", flocation.getWorldName(), dx + topLeft.getX(), dz + topLeft.getZ()));
                             }
                         }
                     } else if (factionHere.isSafeZone()) {
-                        row.then("+").color(Conf.colorSafezone).tooltip(oneLineToolTip(factionHere, fplayer));
+                        row.then("+").color(ChatColor.valueOf(Config.COLOR_SAFEZONE.getString())).tooltip(oneLineToolTip(factionHere, fplayer));
                     } else if (factionHere.isWarZone()) {
-                        row.then("+").color(Conf.colorWar).tooltip(oneLineToolTip(factionHere, fplayer));
+                        row.then("+").color(ChatColor.valueOf(Config.COLOR_WARZONE.getString())).tooltip(oneLineToolTip(factionHere, fplayer));
                     } else if (factionHere == faction || factionHere == factionLoc || relation.isAtLeast(Relation.ALLY) ||
-                            (Conf.showNeutralFactionsOnMap && relation.equals(Relation.NEUTRAL)) ||
-                            (Conf.showEnemyFactionsOnMap && relation.equals(Relation.ENEMY)) ||
-                            (Conf.showTrucesFactionsOnMap && relation.equals(Relation.TRUCE))) {
+                            (Config.MAP_SHOW_NEUTRAL_FACTIONS.getOption() && relation.equals(Relation.NEUTRAL)) ||
+                            (Config.MAP_SHOW_ENEMY_FACTIONS.getOption() && relation.equals(Relation.ENEMY)) ||
+                            (Config.MAP_SHOW_TRUCE_FACTIONS.getOption() && relation.equals(Relation.TRUCE))) {
                         if (!fList.containsKey(factionHere.getTag())) {
-                            fList.put(factionHere.getTag(), Conf.mapKeyChrs[Math.min(chrIdx++, Conf.mapKeyChrs.length - 1)]);
+                            char[] mapKeyChrs = Config.MAP_KEY_CHARS.getString().toCharArray();
+                            fList.put(factionHere.getTag(), mapKeyChrs[Math.min(chrIdx++, mapKeyChrs.length - 1)]);
                         }
                         char tag = fList.get(factionHere.getTag());
 
                         //row.then(String.valueOf(tag)).color(factionHere.getColorTo(faction)).tooltip(getToolTip(factionHere, fplayer));
                         //changed out with a performance friendly one line tooltip :D
-                        if (factionHere.getSpawnerChunks().contains(fastChunk) && Conf.userSpawnerChunkSystem) {
-                            row.then(String.valueOf(tag)).color(Conf.spawnerChunkColor).tooltip(oneLineToolTip(factionHere, fplayer) + CC.Reset + CC.Blue + " " + Conf.spawnerChunkString);
+                        if (factionHere.getSpawnerChunks().contains(fastChunk) && Config.SPAWNERCHUNKS_ENABLED.getOption()) {
+                            row.then(String.valueOf(tag)).color(ChatColor.valueOf(Config.SPAWNERCHUNKS_COLOR.getString())).tooltip(oneLineToolTip(factionHere, fplayer) + CC.Reset + CC.Blue + " " + Config.SPAWNERCHUNKS_STRING.getString());
                         } else {
                             row.then(String.valueOf(tag)).color(factionHere.getColorTo(faction)).tooltip(oneLineToolTip(factionHere, fplayer));
-                        }            } else {
+                        }
+                    } else {
                         row.then("-").color(ChatColor.GRAY);
                     }
                 }
@@ -293,7 +295,7 @@ public abstract class MemoryBoard extends Board {
         }
 
         // Add the faction key
-        if (Conf.showMapFactionKey) {
+        if (Config.MAP_SHOW_FACTION_KEY.getOption()) {
             FancyMessage fRow = new FancyMessage("");
             for (String key : fList.keySet()) {
                 fRow.then(String.format("%s: %s ", fList.get(key), key)).color(ChatColor.GRAY);

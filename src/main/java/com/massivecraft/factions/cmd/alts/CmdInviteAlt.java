@@ -1,6 +1,5 @@
 package com.massivecraft.factions.cmd.alts;
 
-import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.Aliases;
@@ -11,6 +10,7 @@ import com.massivecraft.factions.cmd.audit.FLogType;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.util.CC;
+import com.massivecraft.factions.zcore.config.Config;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
@@ -35,7 +35,7 @@ public class CmdInviteAlt extends FCommand {
 
     @Override
     public void perform(CommandContext context) {
-        if (!FactionsPlugin.getInstance().getConfig().getBoolean("f-alts.Enabled", false)) {
+        if (!Config.FACTION_ALT_ENABLED.getOption()) {
             context.msg(TL.GENERIC_DISABLED, "Faction Alts");
             return;
         }
@@ -52,7 +52,7 @@ public class CmdInviteAlt extends FCommand {
 
         // if economy is enabled, they're not on the bypass list, and this
         // command has a cost set, make 'em pay
-        if (!context.payForCommand(Conf.econCostInvite, TL.COMMAND_INVITE_TOINVITE.toString(), TL.COMMAND_INVITE_FORINVITE.toString())) {
+        if (!context.payForCommand(Config.ECON_COST_INVITE.getDouble(), TL.COMMAND_INVITE_TOINVITE.toString(), TL.COMMAND_INVITE_FORINVITE.toString())) {
             return;
         }
 
@@ -80,7 +80,7 @@ public class CmdInviteAlt extends FCommand {
                 .replace("%2$s", context.faction.getTag())
                 .replaceAll("&", "§"))
                 .tooltip(TL.COMMAND_INVITE_CLICKTOJOIN.toString())
-                .command("/" + Conf.baseCommandAliases.get(0) + " join " + context.faction.getTag());
+                .command("/" + Config.CMD_ALIASES.getStringList().get(0) + " join " + context.faction.getTag());
         message.send(target.getPlayer());
         FactionsPlugin.instance.logFactionEvent(context.faction, FLogType.INVITES, context.fPlayer.getName(), CC.Green + "invited", target.getName());
         context.faction.msg(TL.COMMAND_ALTINVITE_INVITED_ALT, context.fPlayer.describeTo(context.faction, true), target.describeTo(context.faction));

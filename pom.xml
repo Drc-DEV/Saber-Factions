@@ -83,6 +83,10 @@
                                 <pattern>de.tr7zw</pattern>
                                 <shadedPattern>com.massivecraft.factions.shade.nbtapi</shadedPattern>
                             </relocation>
+                            <relocation>
+                                <pattern>pro.dracarys.configlib</pattern>
+                                <shadedPattern>com.massivecraft.factions.shade.configlib</shadedPattern>
+                            </relocation>
                         </relocations>
                     </configuration>
                     <executions>
@@ -98,6 +102,12 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.Drc-DEV</groupId>
+            <artifactId>configlib</artifactId>
+            <version>1.9.3</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>xyz.xenondevs</groupId>
             <artifactId>particle</artifactId>

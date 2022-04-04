@@ -1,88 +1,3 @@
-Config-Version: 1.1
-
-# Debug
-# Turn this on if you are having issues with something and working on resolving them.
-# This will spam your console with information that is useful if you know how to read the source.
-# It's suggested that you only turn this on at the direction of a developer.
-debug: false
-
-# Prevent find factions exploit
-# This will help limit how many times a player can be sent a map of factions.
-# Set this to the cooldown you want, in miliseconds, for a map to be shown to a player.
-# If you want to log when a player violates this (only happens on chunk enter so it shouldn't be too spammy),
-#   set log to true and it will be logged to console as "player tried to show a faction map too soon and triggered exploit blocker."
-findfactionsexploit:
-  cooldown: 2000 # in miliseconds. 2000 = 2 seconds.
-  log: false
-
-### Hard Core Settings ###
-# Many of the features that are / are to come in this section have been requested by
-#   people in relation to HCF servers. All settings are set to the normal Factions
-#   behavior by default.
-
-# Default Relation allows you to change the default relation for Factions.
-# Example usage would be so people can't leave then make a new Faction while Raiding
-#   in order to be able to execute commands if the default relation is neutral.
-# This has always been neutral.
-default-relation: "neutral"
-
-# Portal Creation
-# Do you want to limit portal creation?
-portals:
-  limit: false # will disable the below check if set to false
-
-  # What should the minimum relation be to create a portal in territory?
-  # Goes in the order of: ENEMY, NEUTRAL, ALLY, MEMBER.
-  # Minimum relation allows that and all listed to the right to create portals.
-  # Example: put ALLY to allow ALLY and MEMBER to be able to create portals.
-  minimum-relation: MEMBER # If typed incorrectly, defaults to NEUTRAL.
-
-### Hard Core Settings ###
-
-# Warps
-# What should be the max amount of warps that a Faction can set?
-max-warps: 5
-
-# This is the cost section for warps.
-# It will charge them each time the command would be successful. (won't charge on erroneous /f warp attempts).
-# You can use decimal places here.
-# If enabled is set to false, it will ignore the values.
-warp-cost:
-  enabled: false
-  setwarp: 5
-  delwarp: 5
-  warp: 5
-
-# Faction Fly
-# Enable Faction Fly:
-enable-faction-flight: true
-ffly:
-  enemy-radius-check: 1 #How frequently to check enemy radius, in seconds. Set to 0 to disable checking.
-  AutoEnable: true
-  CombatFlyCooldown: 10 #Cooldown in seconds for someone being in combat before their fly is automatically re-enabled
-  enemies-near-disable-flight: true #This means F Stealth Will Be Redundant
-  disable-flight-on-generic-damage: false #Any Damage a Player Takes Their Flight Will Be Disabled
-  disable-flight-on-mob-damage: false #Any Damage a Player Takes From A Mob Their Flight Will Be Disabled
-  disable-flight-on-player-damage: true
-
-# If a player leaves fly (out of territory or took damage)
-# how long should they not take fall damage for?
-# Set to 0 to have them always take fall damage.
-fly-falldamage-cooldown: 10
-
-# Pistons
-# Should we disable pistons in Faction territory? This will prevent people from doing something like:
-# http://i.gyazo.com/6a1a31222e58a5d60ff341c13f6a8404.gif
-disable-pistons-in-territory: false
-
-# Raids
-# Should we disable starting (vanilla) raids in Faction territory?
-disable-raids-in-territory: true
-
-# Chorus Teleporting
-# Should we disallow players to teleport into claimed land with chorus fruit?
-disable-chorus-teleport-in-territory: true
-
 # ToolTips
 # This section is to configure tooltips for things like /f list
 tooltips:
@@ -222,13 +137,6 @@ max-relations:
   truce: 0
   neutral: -1
   enemy: -1
-
-# WorldBorder support
-# A buffer of 0 means faction claims can go right up to the border of the world.
-# The buffer is in chunks, so 1 as a buffer means an entire chunk of buffer between
-# the border of the world and what can be claimed to factions
-world-border:
-  buffer: 0
 
 # Raids
 # Allow a faction to be raided if they have more land than power.
@@ -447,15 +355,6 @@ fwarp-gui:
     Name: ' '
     Lore:
       - ' '
-############################################################
-# +------------------------------------------------------+ #
-# |                  Faction Broadcasts                  | #
-# +------------------------------------------------------+ #
-############################################################
-faction-creation-broadcast: true #Disabling this will not make faction creation broadcasts appear in chat.
-faction-disband-broadcast: true #Disabling this will not make faction disband broadcasts appear in chat.
-faction-open-broadcast: true #Disabling this will not make faction open broadcasts appear in chat.
-faction-leader-broadcast: true #Disabling this will not make leader changes appear in chat.
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -495,16 +394,6 @@ f-inventory-see:
 
 ############################################################
 # +------------------------------------------------------+ #
-# |                Faction Alt Accounts                  | #
-# +------------------------------------------------------+ #
-############################################################
-#Faction Alts for extra power, sand printing, afking spawners
-f-alts:
-  Enabled: true
-  Have-Power: true
-
-############################################################
-# +------------------------------------------------------+ #
 # |                  Faction Rules                       | #
 # +------------------------------------------------------+ #
 ############################################################
@@ -528,33 +417,6 @@ frules:
 ftnt:
   Enabled: true
   Bank-Limit: 250000
-
-############################################################
-# +------------------------------------------------------+ #
-# |                 Faction Discord                      | #
-# +------------------------------------------------------+ #
-############################################################
-#This option allows factions to set their discord link to their specific faction
-fdiscord:
-  Enabled: true
-
-############################################################
-# +------------------------------------------------------+ #
-# |                  Faction PayPal                      | #
-# +------------------------------------------------------+ #
-############################################################
-#This option allows factions to set their paypal link to their specific faction
-fpaypal:
-  Enabled: true
-
-############################################################
-# +------------------------------------------------------+ #
-# |                  Faction Checkpoints                 | #
-# +------------------------------------------------------+ #
-############################################################
-#This option is for a quick fast and in a hurry teleport to raids etc.
-checkpoints:
-  Enabled: true
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -610,15 +472,6 @@ f-disband-gui:
     Type: BLACK_WOOL
     Name: ' '
     Lore:
-
-############################################################
-# +------------------------------------------------------+ #
-# |                Faction GracePeriod                   | #
-# +------------------------------------------------------+ #
-############################################################
-#This option will deny all explosions
-f-grace:
-  Enabled: true
 
 ############################################################
 # +------------------------------------------------------+ #
